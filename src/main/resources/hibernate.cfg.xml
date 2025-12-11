@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+
+        <!-- DB connection -->
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/space_mission_control</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.connection.password">+dima1755#</property>
+
+        <!-- SQL dialect -->
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+
+        <!-- Show SQL -->
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <!-- Auto schema update -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!-- Annotated model classes -->
+        <mapping class="spacemissioncontrol.entity.Mission"/>
+        <mapping class="spacemissioncontrol.entity.MissionDetails"/>
+        <mapping class="spacemissioncontrol.entity.Astronaut"/>
+        <mapping class="spacemissioncontrol.entity.Equipment"/>
+        <mapping class="spacemissioncontrol.entity.Spaceship"/>
+
+    </session-factory>
+</hibernate-configuration>
