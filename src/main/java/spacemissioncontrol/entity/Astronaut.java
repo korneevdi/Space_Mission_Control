@@ -99,9 +99,8 @@ public class Astronaut {
                     Last name: %s,
                     Rank: %s,
                     Birth date: %s,
-                    Country: %s,
-                    Missions: %s
-                """.formatted(id, firstName, lastName, rank, birthDate, country, missionList);
+                    Country: %s
+                """.formatted(id, firstName, lastName, rank, birthDate, country);
     }
 
     @Override

@@ -86,9 +86,8 @@ public class Spaceship {
                     ID: %s,
                     Model: %s,
                     Manufacturer: %s,
-                    Weight: %s kg,
-                    Missions: %s
-                """.formatted(id, model, manufacturer, weightKg, missionList);
+                    Weight: %s kg
+                """.formatted(id, model, manufacturer, weightKg);
     }
 
     @Override

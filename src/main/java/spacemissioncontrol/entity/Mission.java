@@ -124,13 +124,9 @@ public class Mission {
                     Status: %s,
                     Budget: %s Mio. USD,
                     Duration: %s days,
-                    Description: %s,
-                    Equipment: %s,
-                    Spaceships: %s,
-                    Astronauts: %s
+                    Description: %s
                 """.formatted(id, name, launchDate, status,
-                missionDetails.getBudgetMillionUSD(), missionDetails.getDurationDays(), missionDetails.getDescription(),
-                equipmentList, spaceshipList, astronautList);
+                missionDetails.getBudgetMillionUSD(), missionDetails.getDurationDays(), missionDetails.getDescription());
     }
 
     @Override
