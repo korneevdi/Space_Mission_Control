@@ -3,6 +3,7 @@ package spacemissioncontrol.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
 @Table(name = "equipment")
@@ -65,5 +66,32 @@ public class Equipment {
 
     public void setMission(Mission mission) {
         this.mission = mission;
+    }
+
+    @Override
+    public String toString() {
+        return """
+                Equipment
+                    ID: %s,
+                    Name: %s,
+                    Category: %s,
+                    Weight: %s kg,
+                    Mission: %s
+                """.formatted(id, name, category, weightKg, mission.getName());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Equipment equipment = (Equipment) o;
+        return Objects.equals(name, equipment.name)
+                && Objects.equals(category, equipment.category)
+                && Objects.equals(weightKg, equipment.weightKg);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, category, weightKg);
     }
 }

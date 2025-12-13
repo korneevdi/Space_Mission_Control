@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "missions")
@@ -111,5 +112,39 @@ public class Mission {
 
     public void setAstronautList(List<Astronaut> astronautList) {
         this.astronautList = astronautList;
+    }
+
+    @Override
+    public String toString() {
+        return """
+                Mission
+                    ID: %s,
+                    Name: %s,
+                    Launch date: %s,
+                    Status: %s,
+                    Budget: %s Mio. USD,
+                    Duration: %s days,
+                    Description: %s,
+                    Equipment: %s,
+                    Spaceships: %s,
+                    Astronauts: %s
+                """.formatted(id, name, launchDate, status,
+                missionDetails.getBudgetMillionUSD(), missionDetails.getDurationDays(), missionDetails.getDescription(),
+                equipmentList, spaceshipList, astronautList);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Mission mission = (Mission) o;
+        return Objects.equals(name, mission.name)
+                && Objects.equals(launchDate, mission.launchDate)
+                && Objects.equals(status, mission.status);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, launchDate, status);
     }
 }
