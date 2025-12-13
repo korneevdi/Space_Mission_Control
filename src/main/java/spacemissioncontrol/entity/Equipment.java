@@ -23,7 +23,7 @@ public class Equipment {
     private BigDecimal weightKg;
 
     // missions: many-to-one
-    @ManyToMany
+    @ManyToOne
     @JoinColumn(name = "mission_id")
     private Mission mission;
 
