@@ -1,7 +1,10 @@
 package spacemissioncontrol;
 
 import org.hibernate.SessionFactory;
+import spacemissioncontrol.service.AstronautService;
+import spacemissioncontrol.service.EquipmentService;
 import spacemissioncontrol.service.MissionService;
+import spacemissioncontrol.service.SpaceshipService;
 import spacemissioncontrol.util.HibernateConfig;
 
 public class Main {
@@ -10,8 +13,17 @@ public class Main {
         try (SessionFactory sessionFactory = HibernateConfig.getSessionFactory()) {
             System.out.println("Hibernate started!");
 
-            MissionService missionService = new MissionService();
-            missionService.showAllMissions();
+            //MissionService missionService = new MissionService();
+            //missionService.showAllMissions();
+
+            //AstronautService astronautService = new AstronautService();
+            //astronautService.showAllAstronauts();
+
+            //SpaceshipService spaceshipService = new SpaceshipService();
+            //spaceshipService.showAllSpaceships();
+
+            //EquipmentService equipmentService = new EquipmentService();
+            //equipmentService.showAllEquipment();
         }
     }
 }
