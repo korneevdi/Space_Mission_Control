@@ -25,7 +25,7 @@ public class Mission {
     private String status;
 
     // mission_details: one-to-one
-    @OneToOne(mappedBy = "mission", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "mission", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private MissionDetails missionDetails;
 
     // equipment: one-to-many
@@ -121,12 +121,8 @@ public class Mission {
                     ID: %s,
                     Name: %s,
                     Launch date: %s,
-                    Status: %s,
-                    Budget: %s Mio. USD,
-                    Duration: %s days,
-                    Description: %s
-                """.formatted(id, name, launchDate, status,
-                missionDetails.getBudgetMillionUSD(), missionDetails.getDurationDays(), missionDetails.getDescription());
+                    Status: %s
+                """.formatted(id, name, launchDate, status);
     }
 
     @Override

@@ -13,8 +13,9 @@ public class Main {
         try (SessionFactory sessionFactory = HibernateConfig.getSessionFactory()) {
             System.out.println("Hibernate started!");
 
-            //MissionService missionService = new MissionService();
+            MissionService missionService = new MissionService();
             //missionService.showAllMissions();
+            missionService.showAllMissionsWithDetails();
 
             //AstronautService astronautService = new AstronautService();
             //astronautService.showAllAstronauts();
