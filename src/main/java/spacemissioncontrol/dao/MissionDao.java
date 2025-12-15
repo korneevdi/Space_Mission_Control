@@ -1,8 +1,5 @@
 package spacemissioncontrol.dao;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import spacemissioncontrol.entity.Mission;
 import spacemissioncontrol.util.HibernateConfig;
@@ -20,10 +17,27 @@ public class MissionDao extends AbstractDao<Mission> {
     public List<Mission> findAllWithDetails() {
         try (Session session = HibernateConfig.getSessionFactory().openSession()) {
             return session.createQuery(
-                    "SELECT m FROM Mission m " +
-                    "LEFT JOIN FETCH m.missionDetails",
+                    """
+                            SELECT m FROM %s m
+                            LEFT JOIN FETCH m.missionDetails
+                            """.formatted(ENTITY_NAME),
                     Mission.class
             ).list();
+        }
+    }
+
+    public List<Mission> findAllByNameLike(String missionNameLike) {
+        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+            return session.createQuery(
+                            """
+                                    SELECT m
+                                    FROM %s m
+                                    WHERE lower(m.name) LIKE :name
+                                    """.formatted(ENTITY_NAME),
+                            Mission.class
+                    )
+                    .setParameter("name", "%" + missionNameLike.toLowerCase() + "%")
+                    .getResultList();
         }
     }
 }

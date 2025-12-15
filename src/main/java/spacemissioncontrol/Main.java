@@ -17,8 +17,8 @@ public class Main {
             //missionService.showAll();
             //missionService.showAllWithDetails();
             //missionService.showAllByField("name", "artemis i");
+            //missionService.showAllByNameLike("crew");
 
-            //missionService.showByNameLike(); // Ignore case?
             //missionService.add();
             //missionService.delete();
             //missionService.update();
@@ -37,8 +37,7 @@ public class Main {
             //equipmentService.showAll();
             //equipmentService.showAllByField("category", "Navigation");
             //equipmentService.showAllByMissionName("artemis i");
-
-            //equipmentService.showByNameLike();
+            //equipmentService.showAllByNameLike("camera");
         }
     }
 }

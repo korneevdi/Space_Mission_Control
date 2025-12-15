@@ -27,4 +27,14 @@ public class EquipmentService extends AbstractService<Equipment> {
             System.out.println("No data found for mission " + missionName);
         }
     }
+
+    public void showAllByNameLike(String nameLike) {
+        List<Equipment> list = equipmentDao.findAllByNameLike(nameLike);
+
+        if(list != null && !list.isEmpty()) {
+            printList(list);
+        } else {
+            System.out.println("No data found");
+        }
+    }
 }

@@ -24,4 +24,19 @@ public class EquipmentDao extends AbstractDao<Equipment> {
                     .getResultList();
         }
     }
+
+    public List<Equipment> findAllByNameLike(String equipmentNameLike) {
+        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+            return session.createQuery(
+                            """
+                                    SELECT e
+                                    FROM %s e
+                                    WHERE lower(e.name) LIKE :name
+                                    """.formatted(ENTITY_NAME),
+                            Equipment.class
+                    )
+                    .setParameter("name", "%" + equipmentNameLike.toLowerCase() + "%")
+                    .getResultList();
+        }
+    }
 }
