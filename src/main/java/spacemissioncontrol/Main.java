@@ -15,7 +15,11 @@ public class Main {
 
             MissionService missionService = new MissionService();
             //missionService.showAllMissions();
-            missionService.showAllMissionsWithDetails();
+            //missionService.showAllMissionsWithDetails();
+            missionService.showAllMissionsByField("launchDate", "2022-11-16");
+            //missionService.add();
+            //missionService.delete();
+            //missionService.update();
 
             //AstronautService astronautService = new AstronautService();
             //astronautService.showAllAstronauts();

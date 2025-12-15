@@ -1,5 +1,8 @@
 package spacemissioncontrol.dao;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import spacemissioncontrol.entity.Mission;
 import spacemissioncontrol.util.HibernateConfig;
@@ -21,6 +24,19 @@ public class MissionDao {
                     "LEFT JOIN FETCH m.missionDetails",
                     Mission.class
             ).list();
+        }
+    }
+
+    public List<Mission> findAllByField(String fieldName, Object value) {
+        try(Session session = HibernateConfig.getSessionFactory().openSession()) {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<Mission> criteriaQuery = criteriaBuilder.createQuery(Mission.class);
+            Root<Mission> root = criteriaQuery.from(Mission.class);
+
+            criteriaQuery.select(root)
+                    .where(criteriaBuilder.equal(root.get(fieldName), value));
+
+            return session.createQuery(criteriaQuery).getResultList();
         }
     }
 }
