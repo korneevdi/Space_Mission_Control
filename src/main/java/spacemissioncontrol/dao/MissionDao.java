@@ -9,12 +9,12 @@ import spacemissioncontrol.util.HibernateConfig;
 
 import java.util.List;
 
-public class MissionDao {
+public class MissionDao extends AbstractDao<Mission> {
 
-    public List<Mission> findAll() {
-        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
-            return session.createQuery("FROM Mission", Mission.class).list();
-        }
+    private final static String ENTITY_NAME = "Mission";
+
+    public MissionDao() {
+        super(Mission.class, ENTITY_NAME);
     }
 
     public List<Mission> findAllWithDetails() {
@@ -24,19 +24,6 @@ public class MissionDao {
                     "LEFT JOIN FETCH m.missionDetails",
                     Mission.class
             ).list();
-        }
-    }
-
-    public List<Mission> findAllByField(String fieldName, Object value) {
-        try(Session session = HibernateConfig.getSessionFactory().openSession()) {
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<Mission> criteriaQuery = criteriaBuilder.createQuery(Mission.class);
-            Root<Mission> root = criteriaQuery.from(Mission.class);
-
-            criteriaQuery.select(root)
-                    .where(criteriaBuilder.equal(root.get(fieldName), value));
-
-            return session.createQuery(criteriaQuery).getResultList();
         }
     }
 }

@@ -6,11 +6,11 @@ import spacemissioncontrol.util.HibernateConfig;
 
 import java.util.List;
 
-public class SpaceshipDao {
+public class SpaceshipDao extends AbstractDao<Spaceship> {
 
-    public List<Spaceship> findAll() {
-        try(Session session = HibernateConfig.getSessionFactory().openSession()) {
-            return session.createQuery("FROM Spaceship", Spaceship.class).list();
-        }
+    private final static String ENTITY_NAME = "Spaceship";
+
+    public SpaceshipDao() {
+        super(Spaceship.class, ENTITY_NAME);
     }
 }

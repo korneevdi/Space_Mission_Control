@@ -6,33 +6,26 @@ import spacemissioncontrol.entity.MissionDetails;
 
 import java.util.List;
 
-public class MissionService {
+public class MissionService extends AbstractService<Mission> {
 
-    private final MissionDao missionDao = new MissionDao();
+    private final MissionDao missionDao;
 
-    public void showAllMissions() {
-        List<Mission> missions = missionDao.findAll();
-
-        if(missions != null && !missions.isEmpty()) {
-            printMissions(missions);
-        } else {
-            System.out.println("No data found");
-        }
+    public MissionService() {
+        this(new MissionDao());
     }
 
-    public void showAllMissionsWithDetails() {
+    private MissionService(MissionDao missionDao) {
+        super(missionDao);
+        this.missionDao = missionDao;
+    }
+
+    public void showAllWithDetails() {
         List<Mission> missions = missionDao.findAllWithDetails();
 
         if(missions != null && !missions.isEmpty()) {
             printMissionsWithDetails(missions);
         } else {
             System.out.println("No data found");
-        }
-    }
-
-    private void printMissions(List<Mission> list) {
-        for(Mission m : list) {
-            System.out.println(m);
         }
     }
 

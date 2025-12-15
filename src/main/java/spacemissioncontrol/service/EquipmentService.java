@@ -5,23 +5,16 @@ import spacemissioncontrol.entity.Equipment;
 
 import java.util.List;
 
-public class EquipmentService {
+public class EquipmentService extends AbstractService<Equipment> {
 
-    private final EquipmentDao equipmentDao = new EquipmentDao();
+    private final EquipmentDao equipmentDao;
 
-    public void showAllEquipment() {
-        List<Equipment> equipment = equipmentDao.findAll();
-
-        if(equipment != null && !equipment.isEmpty()) {
-            printEquipment(equipment);
-        } else {
-            System.out.println("No data found");
-        }
+    public EquipmentService() {
+        this(new EquipmentDao());
     }
 
-    private void printEquipment(List<Equipment> list) {
-        for(Equipment e : list) {
-            System.out.println(e);
-        }
+    private EquipmentService(EquipmentDao equipmentDao) {
+        super(equipmentDao);
+        this.equipmentDao = equipmentDao;
     }
 }

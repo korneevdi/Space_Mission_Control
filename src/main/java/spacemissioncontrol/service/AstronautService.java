@@ -5,23 +5,16 @@ import spacemissioncontrol.entity.Astronaut;
 
 import java.util.List;
 
-public class AstronautService {
+public class AstronautService extends AbstractService<Astronaut> {
 
-    private final AstronautDao astronautDao = new AstronautDao();
+    private final AstronautDao astronautDao;
 
-    public void showAllAstronauts() {
-        List<Astronaut> astronauts = astronautDao.findAll();
-
-        if(astronauts != null && !astronauts.isEmpty()) {
-            printAstronauts(astronauts);
-        } else {
-            System.out.println("No data found");
-        }
+    public AstronautService() {
+        this(new AstronautDao());
     }
 
-    private void printAstronauts(List<Astronaut> list) {
-        for(Astronaut a : list) {
-            System.out.println(a);
-        }
+    private AstronautService(AstronautDao astronautDao) {
+        super(astronautDao);
+        this.astronautDao = astronautDao;
     }
 }

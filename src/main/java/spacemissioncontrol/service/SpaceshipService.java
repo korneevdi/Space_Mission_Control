@@ -5,23 +5,16 @@ import spacemissioncontrol.entity.Spaceship;
 
 import java.util.List;
 
-public class SpaceshipService {
+public class SpaceshipService extends AbstractService<Spaceship> {
 
-    private final SpaceshipDao spaceshipDao = new SpaceshipDao();
+    private final SpaceshipDao spaceshipDao;
 
-    public void showAllSpaceships() {
-        List<Spaceship> spaceships = spaceshipDao.findAll();
-
-        if(spaceships != null && !spaceships.isEmpty()) {
-            printSpaceships(spaceships);
-        } else {
-            System.out.println("No data found");
-        }
+    public SpaceshipService() {
+        this(new SpaceshipDao());
     }
 
-    private void printSpaceships(List<Spaceship> list) {
-        for(Spaceship s : list) {
-            System.out.println(s);
-        }
+    private SpaceshipService(SpaceshipDao spaceshipDao) {
+        super(spaceshipDao);
+        this.spaceshipDao = spaceshipDao;
     }
 }

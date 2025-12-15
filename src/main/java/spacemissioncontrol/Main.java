@@ -13,22 +13,25 @@ public class Main {
         try (SessionFactory sessionFactory = HibernateConfig.getSessionFactory()) {
             System.out.println("Hibernate started!");
 
-            MissionService missionService = new MissionService();
-            //missionService.showAllMissions();
-            //missionService.showAllMissionsWithDetails();
-            missionService.showAllMissionsByField("launchDate", "2022-11-16");
+            //MissionService missionService = new MissionService();
+            //missionService.showAll();
+            //missionService.showAllWithDetails();
+            //missionService.showAllByField("launchDate", "2022-11-16");
             //missionService.add();
             //missionService.delete();
             //missionService.update();
 
             //AstronautService astronautService = new AstronautService();
-            //astronautService.showAllAstronauts();
+            //astronautService.showAll();
+            //astronautService.showAllByField("country", "USA");
 
             //SpaceshipService spaceshipService = new SpaceshipService();
-            //spaceshipService.showAllSpaceships();
+            //spaceshipService.showAll();
+            //spaceshipService.showAllByField("weightKg", "77700");
 
             //EquipmentService equipmentService = new EquipmentService();
-            //equipmentService.showAllEquipment();
+            //equipmentService.showAll();
+            //equipmentService.showAllByField("category", "Navigation");
         }
     }
 }
