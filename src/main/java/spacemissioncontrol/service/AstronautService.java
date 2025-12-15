@@ -17,4 +17,14 @@ public class AstronautService extends AbstractService<Astronaut> {
         super(astronautDao);
         this.astronautDao = astronautDao;
     }
+
+    public void showAllByMissionName(String missionName) {
+        List<Astronaut> list = astronautDao.findAllByMissionName(missionName);
+
+        if(list != null && !list.isEmpty()) {
+            printList(list);
+        } else {
+            System.out.println("No data found for mission " + missionName);
+        }
+    }
 }

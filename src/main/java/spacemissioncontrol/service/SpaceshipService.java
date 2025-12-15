@@ -17,4 +17,14 @@ public class SpaceshipService extends AbstractService<Spaceship> {
         super(spaceshipDao);
         this.spaceshipDao = spaceshipDao;
     }
+
+    public void showAllByMissionName(String missionName) {
+        List<Spaceship> list = spaceshipDao.findAllByMissionName(missionName);
+
+        if(list != null && !list.isEmpty()) {
+            printList(list);
+        } else {
+            System.out.println("No data found for mission " + missionName);
+        }
+    }
 }

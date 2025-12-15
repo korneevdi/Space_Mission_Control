@@ -13,4 +13,20 @@ public class SpaceshipDao extends AbstractDao<Spaceship> {
     public SpaceshipDao() {
         super(Spaceship.class, ENTITY_NAME);
     }
+
+    public List<Spaceship> findAllByMissionName(String missionName) {
+        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+            return session.createQuery(
+                            """
+                                    SELECT DISTINCT a
+                                    FROM %s a
+                                    JOIN a.missionList m
+                                    WHERE m.name = :name
+                                    """.formatted(ENTITY_NAME),
+                            Spaceship.class
+                    )
+                    .setParameter("name", missionName)
+                    .getResultList();
+        }
+    }
 }

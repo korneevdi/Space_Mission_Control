@@ -13,4 +13,15 @@ public class EquipmentDao extends AbstractDao<Equipment> {
     public EquipmentDao() {
         super(Equipment.class, ENTITY_NAME);
     }
+
+    public List<Equipment> findAllByMissionName(String missionName) {
+        try(Session session = HibernateConfig.getSessionFactory().openSession()) {
+            return session.createQuery(
+                            "SELECT i FROM " + ENTITY_NAME + " i WHERE i.mission.name = :name",
+                            Equipment.class
+                    )
+                    .setParameter("name", missionName)
+                    .getResultList();
+        }
+    }
 }
