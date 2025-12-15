@@ -15,7 +15,7 @@ public class Spaceship {
     @Column(name = "ship_id")
     private Integer id;
 
-    @Column(name = "model")
+    @Column(name = "model", nullable = false)
     private String model;
 
     @Column(name = "manufacturer")

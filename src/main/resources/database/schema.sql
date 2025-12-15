@@ -4,14 +4,14 @@ CREATE TABLE IF NOT EXISTS missions
 	mission_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	name VARCHAR(100) UNIQUE NOT NULL,
 	launch_date DATE,
-	status VARCHAR(20)
+	status VARCHAR(20) NOT NULL
 );
 
 -- 2
 CREATE TABLE IF NOT EXISTS spaceships
 (
 	ship_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	model VARCHAR(50),
+	model VARCHAR(50) NOT NULL,
 	manufacturer VARCHAR(100),
 	capacity INT,
 	weight_kg DECIMAL
@@ -21,11 +21,11 @@ CREATE TABLE IF NOT EXISTS spaceships
 CREATE TABLE IF NOT EXISTS astronauts
 (
 	astronaut_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	first_name VARCHAR(50),
-	last_name VARCHAR(50),
+	first_name VARCHAR(50) NOT NULL,
+	last_name VARCHAR(50) NOT NULL,
 	rank VARCHAR(50),
-	birth_date DATE,
-	country VARCHAR(50)
+	birth_date DATE NOT NULL,
+	country VARCHAR(50) NOT NULL
 );
 
 -- 4
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS equipment
 (
 	equipment_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	mission_id INT,
-	name VARCHAR(100),
+	name VARCHAR(100) NOT NULL,
 	category VARCHAR(50),
 	weight_kg DECIMAL,
 
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS mission_details
     mission_id INT PRIMARY KEY,
     budget_million_usd DECIMAL,
     duration_days INT,
-    description TEXT,
+    description TEXT NOT NULL,
 
     CONSTRAINT mission_mission_details_fk FOREIGN KEY (mission_id)
         REFERENCES missions(mission_id)

@@ -17,7 +17,7 @@ public class MissionDetails {
     @Column(name = "duration_days")
     private Integer durationDays;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
 
     @OneToOne

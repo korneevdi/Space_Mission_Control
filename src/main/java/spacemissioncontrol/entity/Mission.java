@@ -21,7 +21,7 @@ public class Mission {
     @Column(name = "launch_date")
     private LocalDate launchDate;
 
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private String status;
 
     // mission_details: one-to-one

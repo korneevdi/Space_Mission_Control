@@ -15,19 +15,19 @@ public class Astronaut {
     @Column(name = "astronaut_id")
     private Integer id;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
     @Column(name = "rank")
     private String rank;
 
-    @Column(name = "birth_date")
+    @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
-    @Column(name = "country")
+    @Column(name = "country", nullable = false)
     private String country;
 
     // missions: many-to-many
