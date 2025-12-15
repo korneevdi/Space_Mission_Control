@@ -16,16 +16,16 @@ public class Main {
             //MissionService missionService = new MissionService();
             //missionService.showAll();
             //missionService.showAllWithDetails();
-            //missionService.showAllByField("launchDate", "2022-11-16"); // Ignore case?
+            //missionService.showAllByField("name", "artemis i");
 
-            //missionService.showByNameLike();
+            //missionService.showByNameLike(); // Ignore case?
             //missionService.add();
             //missionService.delete();
             //missionService.update();
 
             //AstronautService astronautService = new AstronautService();
             //astronautService.showAll();
-            //astronautService.showAllByField("country", "USA");
+            //astronautService.showAllByField("country", "uae");
             //astronautService.showAllByMissionName("Crew-6");
 
             //SpaceshipService spaceshipService = new SpaceshipService();
@@ -36,7 +36,7 @@ public class Main {
             //EquipmentService equipmentService = new EquipmentService();
             //equipmentService.showAll();
             //equipmentService.showAllByField("category", "Navigation");
-            //equipmentService.showAllByMissionName("JUICE");
+            //equipmentService.showAllByMissionName("artemis i");
 
             //equipmentService.showByNameLike();
         }

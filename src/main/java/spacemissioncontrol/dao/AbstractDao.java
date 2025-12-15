@@ -2,6 +2,7 @@ package spacemissioncontrol.dao;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import spacemissioncontrol.util.HibernateConfig;
@@ -30,8 +31,16 @@ public abstract class AbstractDao<T> {
             CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(entityClass);
             Root<T> root = criteriaQuery.from(entityClass);
 
+            Predicate predicate;
+
+            if(value instanceof String str) {
+                predicate = criteriaBuilder.equal(criteriaBuilder.lower(root.get(fieldName)), str.toLowerCase());
+            } else {
+                predicate = criteriaBuilder.equal(root.get(fieldName), value);
+            }
+
             criteriaQuery.select(root)
-                    .where(criteriaBuilder.equal(root.get(fieldName), value));
+                    .where(predicate);
 
             return session.createQuery(criteriaQuery).getResultList();
         }

@@ -21,11 +21,11 @@ public class SpaceshipDao extends AbstractDao<Spaceship> {
                                     SELECT DISTINCT a
                                     FROM %s a
                                     JOIN a.missionList m
-                                    WHERE m.name = :name
+                                    WHERE lower(m.name) = :name
                                     """.formatted(ENTITY_NAME),
                             Spaceship.class
                     )
-                    .setParameter("name", missionName)
+                    .setParameter("name", missionName.toLowerCase())
                     .getResultList();
         }
     }

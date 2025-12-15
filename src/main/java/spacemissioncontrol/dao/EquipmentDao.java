@@ -17,10 +17,10 @@ public class EquipmentDao extends AbstractDao<Equipment> {
     public List<Equipment> findAllByMissionName(String missionName) {
         try(Session session = HibernateConfig.getSessionFactory().openSession()) {
             return session.createQuery(
-                            "SELECT i FROM " + ENTITY_NAME + " i WHERE i.mission.name = :name",
+                            "SELECT i FROM " + ENTITY_NAME + " i WHERE lower(i.mission.name) = :name",
                             Equipment.class
                     )
-                    .setParameter("name", missionName)
+                    .setParameter("name", missionName.toLowerCase())
                     .getResultList();
         }
     }

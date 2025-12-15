@@ -21,11 +21,11 @@ public class AstronautDao extends AbstractDao<Astronaut> {
                                     SELECT DISTINCT a
                                     FROM %s a
                                     JOIN a.missionList m
-                                    WHERE m.name = :name
+                                    WHERE lower(m.name) = :name
                                     """.formatted(ENTITY_NAME),
                             Astronaut.class
                     )
-                    .setParameter("name", missionName)
+                    .setParameter("name", missionName.toLowerCase())
                     .getResultList();
         }
     }
