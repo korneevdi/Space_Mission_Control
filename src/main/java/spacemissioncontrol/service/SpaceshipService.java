@@ -10,6 +10,7 @@ import spacemissioncontrol.util.HibernateConfig;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public class SpaceshipService extends AbstractService<Spaceship> {
 
@@ -47,6 +48,7 @@ public class SpaceshipService extends AbstractService<Spaceship> {
 
         if(model == null) {
             System.out.println("Required data missing. Model should be specified");
+            return;
         }
 
         Session session = null;
@@ -55,6 +57,16 @@ public class SpaceshipService extends AbstractService<Spaceship> {
         try {
             session = HibernateConfig.getSessionFactory().openSession();
             transaction = session.beginTransaction();
+
+            boolean exists = spaceshipDao.existsByField(session, Map.of(
+                    "model", model,
+                    "manufacturer", manufacturer
+            ));
+            if(exists) {
+                System.out.println("This spaceship already exists");
+                transaction.rollback();
+                return;
+            }
 
             Mission mission = missionDao.findAllByField(session, "name", missionName)
                     .stream()

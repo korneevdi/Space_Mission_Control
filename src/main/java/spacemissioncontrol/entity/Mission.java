@@ -1,6 +1,8 @@
 package spacemissioncontrol.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,12 +20,15 @@ public class Mission {
     @Column(name = "mission_id")
     private Integer id;
 
+    @NotBlank
+    @Size(max = 100)
     @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "launch_date")
     private LocalDate launchDate;
 
+    @Size(max = 20)
     @Column(name = "status", nullable = false)
     private String status;
 

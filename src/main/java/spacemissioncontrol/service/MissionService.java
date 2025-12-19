@@ -10,6 +10,7 @@ import spacemissioncontrol.util.HibernateConfig;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public class MissionService extends AbstractService<Mission> {
 
@@ -62,6 +63,13 @@ public class MissionService extends AbstractService<Mission> {
         try {
             session = HibernateConfig.getSessionFactory().openSession();
             transaction = session.beginTransaction();
+
+            boolean exists = missionDao.existsByField(session, Map.of("name", name));
+            if(exists) {
+                System.out.println("Mission with name '" + name + "' already exists");
+                transaction.rollback();
+                return;
+            }
 
             Mission mission = new Mission();
             mission.setName(name);

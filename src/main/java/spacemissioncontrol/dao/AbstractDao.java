@@ -5,10 +5,10 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
-import spacemissioncontrol.util.HibernateConfig;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractDao<T> {
 
@@ -45,6 +45,25 @@ public abstract class AbstractDao<T> {
 
     public void insert(Session session, T entity) {
         session.persist(entity);
+    }
+
+    public boolean existsByField(Session session, Map<String, Object> fieldsAndValues) {
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<T> root = criteriaQuery.from(entityClass);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        for(Map.Entry<String, Object> entry : fieldsAndValues.entrySet()) {
+            predicates.add(criteriaBuilder.equal(root.get(entry.getKey()), entry.getValue()));
+        }
+
+        criteriaQuery.select(criteriaBuilder.count(root))
+                .where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
+
+        Long count = session.createQuery(criteriaQuery).getSingleResult();
+
+        return count > 0;
     }
 
     public void merge(Session session, T entity) {

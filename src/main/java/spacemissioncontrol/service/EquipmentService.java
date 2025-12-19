@@ -10,6 +10,7 @@ import spacemissioncontrol.util.HibernateConfig;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public class EquipmentService extends AbstractService<Equipment> {
 
@@ -59,6 +60,7 @@ public class EquipmentService extends AbstractService<Equipment> {
 
         if(name == null) {
             System.out.println("Required data missing. Equipment name should be specified");
+            return;
         }
 
         Session session = null;
@@ -67,6 +69,16 @@ public class EquipmentService extends AbstractService<Equipment> {
         try {
             session = HibernateConfig.getSessionFactory().openSession();
             transaction = session.beginTransaction();
+
+            boolean exists = equipmentDao.existsByField(session, Map.of(
+                    "name", name,
+                    "category", category
+            ));
+            if(exists) {
+                System.out.println("This equipment unit already exists");
+                transaction.rollback();
+                return;
+            }
 
             Mission mission = missionDao.findAllByField(session, "name", missionName)
                     .stream()

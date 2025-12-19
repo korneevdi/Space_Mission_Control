@@ -1,6 +1,7 @@
 package spacemissioncontrol.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -16,9 +17,11 @@ public class Equipment {
     @Column(name = "equipment_id")
     private Integer id;
 
+    @Size(max = 100)
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Size(max = 100)
     @Column(name = "category", nullable = false)
     private String category;
 

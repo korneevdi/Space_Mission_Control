@@ -1,6 +1,7 @@
 package spacemissioncontrol.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,18 +17,22 @@ public class Astronaut {
     @Column(name = "astronaut_id")
     private Integer id;
 
+    @Size(max = 50)
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
+    @Size(max = 50)
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
+    @Size(max = 50)
     @Column(name = "rank")
     private String rank;
 
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
+    @Size(max = 50)
     @Column(name = "country", nullable = false)
     private String country;
 
