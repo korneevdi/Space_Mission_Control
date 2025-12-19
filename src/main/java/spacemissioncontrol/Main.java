@@ -13,31 +13,43 @@ public class Main {
         try (SessionFactory sessionFactory = HibernateConfig.getSessionFactory()) {
             System.out.println("Hibernate started!");
 
-            //MissionService missionService = new MissionService();
+            MissionService missionService = new MissionService();
             //missionService.showAll();
             //missionService.showAllWithDetails();
             //missionService.showAllByField("name", "artemis i");
             //missionService.showAllByNameLike("crew");
+            //missionService.addNew("Another mission", null, "in planing", null, null, "description");
 
-            //missionService.add();
             //missionService.delete();
             //missionService.update();
 
-            //AstronautService astronautService = new AstronautService();
+            AstronautService astronautService = new AstronautService();
             //astronautService.showAll();
             //astronautService.showAllByField("country", "uae");
-            //astronautService.showAllByMissionName("Crew-6");
+            //astronautService.showAllByMissionName("juice");
+            //astronautService.addNew("Sara", "Mohn", "engineer", "1995-07-01", "Canada", "JUICE");
 
-            //SpaceshipService spaceshipService = new SpaceshipService();
+            //astronautService.delete();
+            //astronautService.update();
+
+            SpaceshipService spaceshipService = new SpaceshipService();
             //spaceshipService.showAll();
             //spaceshipService.showAllByField("weightKg", "77700");
-            //spaceshipService.showAllByMissionName("Artemis I");
+            //spaceshipService.showAllByMissionName("Artemis i");
+            //spaceshipService.addNew("Lana I", "ESA", 82, "8500", "Artemis I");
 
-            //EquipmentService equipmentService = new EquipmentService();
+            //spaceshipService.delete();
+            //spaceshipService.update();
+
+            EquipmentService equipmentService = new EquipmentService();
             //equipmentService.showAll();
             //equipmentService.showAllByField("category", "Navigation");
-            //equipmentService.showAllByMissionName("artemis i");
+            //equipmentService.showAllByMissionName("juice");
             //equipmentService.showAllByNameLike("camera");
+            //equipmentService.addNew("Telescope mirror", "science", "120.4", "JUICE");
+
+            //equipmentService.delete();
+            //equipmentService.update();
         }
     }
 }

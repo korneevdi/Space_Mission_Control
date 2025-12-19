@@ -3,6 +3,7 @@ package spacemissioncontrol.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,25 +31,25 @@ public class Mission {
 
     // equipment: one-to-many
     @OneToMany(mappedBy = "mission", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Equipment> equipmentList;
+    private List<Equipment> equipmentList = new ArrayList<>();
 
     // spaceships: many-to-many
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "mission_spaceships",
             joinColumns = @JoinColumn(name = "mission_id"),
             inverseJoinColumns = @JoinColumn(name = "spaceship_id")
     )
-    private List<Spaceship> spaceshipList;
+    private List<Spaceship> spaceshipList = new ArrayList<>();
 
     // astronauts: many-to-many
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "mission_astronauts",
             joinColumns = @JoinColumn(name = "mission_id"),
             inverseJoinColumns = @JoinColumn(name = "astronaut_id")
     )
-    private List<Astronaut> astronautList;
+    private List<Astronaut> astronautList = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -138,5 +139,15 @@ public class Mission {
     @Override
     public int hashCode() {
         return Objects.hash(name, launchDate, status);
+    }
+
+    public void addAstronaut(Astronaut astronaut) {
+        astronautList.add(astronaut);
+        astronaut.getMissionList().add(this);
+    }
+
+    public void addSpaceship(Spaceship spaceship) {
+        spaceshipList.add(spaceship);
+        spaceship.getMissionList().add(this);
     }
 }

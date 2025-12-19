@@ -1,6 +1,8 @@
 package spacemissioncontrol.service;
 
+import org.hibernate.Session;
 import spacemissioncontrol.dao.AbstractDao;
+import spacemissioncontrol.util.HibernateConfig;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -16,24 +18,28 @@ public abstract class AbstractService<T> {
     }
 
     public void showAll() {
-        List<T> allItems = dao.findAll();
+        try(Session session = HibernateConfig.getSessionFactory().openSession()) {
+            List<T> allItems = dao.findAll(session);
 
-        if(allItems != null && !allItems.isEmpty()) {
-            printList(allItems);
-        } else {
-            System.out.println("No data found");
+            if(allItems != null && !allItems.isEmpty()) {
+                printList(allItems);
+            } else {
+                System.out.println("No data found");
+            }
         }
     }
 
     public void showAllByField(String fieldName, String rawValue) {
-        Object value = convertValue(fieldName, rawValue);
+        try(Session session = HibernateConfig.getSessionFactory().openSession()) {
+            Object value = convertValue(fieldName, rawValue);
 
-        List<T> allItems = dao.findAllByField(fieldName, value);
+            List<T> allItems = dao.findAllByField(session, fieldName, value);
 
-        if(allItems != null && !allItems.isEmpty()) {
-            printList(allItems);
-        } else {
-            System.out.println("No data found");
+            if(allItems != null && !allItems.isEmpty()) {
+                printList(allItems);
+            } else {
+                System.out.println("No data found");
+            }
         }
     }
 

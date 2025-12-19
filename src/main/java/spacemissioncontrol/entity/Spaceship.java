@@ -3,6 +3,7 @@ package spacemissioncontrol.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,7 +30,7 @@ public class Spaceship {
 
     // missions: many-to-many
     @ManyToMany(mappedBy = "spaceshipList")
-    private List<Mission> missionList;
+    private List<Mission> missionList = new ArrayList<>();
 
     public Integer getId() {
         return id;

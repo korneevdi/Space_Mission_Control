@@ -3,6 +3,7 @@ package spacemissioncontrol.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,7 +33,7 @@ public class Astronaut {
 
     // missions: many-to-many
     @ManyToMany(mappedBy = "astronautList")
-    private List<Mission> missionList;
+    private List<Mission> missionList = new ArrayList<>();
 
     public Integer getId() {
         return id;

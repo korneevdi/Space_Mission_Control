@@ -14,19 +14,17 @@ public class AstronautDao extends AbstractDao<Astronaut> {
         super(Astronaut.class, ENTITY_NAME);
     }
 
-    public List<Astronaut> findAllByMissionName(String missionName) {
-        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
-            return session.createQuery(
-                            """
-                                    SELECT DISTINCT a
-                                    FROM %s a
-                                    JOIN a.missionList m
-                                    WHERE lower(m.name) = :name
-                                    """.formatted(ENTITY_NAME),
-                            Astronaut.class
-                    )
-                    .setParameter("name", missionName.toLowerCase())
-                    .getResultList();
-        }
+    public List<Astronaut> findAllByMissionName(Session session, String missionName) {
+        return session.createQuery(
+                        """
+                                SELECT DISTINCT a
+                                FROM %s a
+                                JOIN a.missionList m
+                                WHERE lower(m.name) = :name
+                                """.formatted(ENTITY_NAME),
+                        Astronaut.class
+                )
+                .setParameter("name", missionName.toLowerCase())
+                .getResultList();
     }
 }
