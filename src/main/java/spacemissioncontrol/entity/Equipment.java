@@ -6,7 +6,9 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
-@Table(name = "equipment")
+@Table(
+        name = "equipment",
+uniqueConstraints = @UniqueConstraint(columnNames = {"name", "category"}))
 public class Equipment {
 
     @Id
@@ -17,7 +19,7 @@ public class Equipment {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "category")
+    @Column(name = "category", nullable = false)
     private String category;
 
     @Column(name = "weight_kg")
@@ -86,12 +88,11 @@ public class Equipment {
         if (o == null || getClass() != o.getClass()) return false;
         Equipment equipment = (Equipment) o;
         return Objects.equals(name, equipment.name)
-                && Objects.equals(category, equipment.category)
-                && Objects.equals(weightKg, equipment.weightKg);
+                && Objects.equals(category, equipment.category);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, category, weightKg);
+        return Objects.hash(name, category);
     }
 }

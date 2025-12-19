@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "missions")
+@Table(
+        name = "missions",
+        uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class Mission {
 
     @Id
@@ -16,7 +18,7 @@ public class Mission {
     @Column(name = "mission_id")
     private Integer id;
 
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "launch_date")
@@ -131,14 +133,12 @@ public class Mission {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Mission mission = (Mission) o;
-        return Objects.equals(name, mission.name)
-                && Objects.equals(launchDate, mission.launchDate)
-                && Objects.equals(status, mission.status);
+        return Objects.equals(name, mission.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, launchDate, status);
+        return Objects.hash(name);
     }
 
     public void addAstronaut(Astronaut astronaut) {

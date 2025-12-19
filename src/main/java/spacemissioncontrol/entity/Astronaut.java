@@ -111,13 +111,12 @@ public class Astronaut {
         Astronaut astronaut = (Astronaut) o;
         return Objects.equals(firstName, astronaut.firstName)
                 && Objects.equals(lastName, astronaut.lastName)
-                && Objects.equals(rank, astronaut.rank)
                 && Objects.equals(birthDate, astronaut.birthDate)
                 && Objects.equals(country, astronaut.country);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, rank, birthDate, country);
+        return Objects.hash(firstName, lastName, birthDate, country);
     }
 }
