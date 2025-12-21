@@ -11,6 +11,8 @@ import spacemissioncontrol.util.HibernateConfig;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -60,6 +62,14 @@ public class MissionService extends AbstractService<Mission> {
             return;
         }
 
+        LocalDate realLaunchDate;
+        try {
+            realLaunchDate = LocalDate.parse(launchDate, DateTimeFormatter.ISO_LOCAL_DATE);
+        } catch (DateTimeParseException e) {
+            System.out.println("Date must be in format yyyy-MM-dd");
+            return;
+        }
+
         Session session = null;
         Transaction transaction = null;
 
@@ -76,9 +86,7 @@ public class MissionService extends AbstractService<Mission> {
 
             Mission mission = new Mission();
             mission.setName(name);
-            if(launchDate != null) {
-                mission.setLaunchDate(LocalDate.parse(launchDate));
-            }
+            mission.setLaunchDate(realLaunchDate);
             mission.setStatus(status);
 
             MissionDetails details = new MissionDetails();

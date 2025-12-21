@@ -1,6 +1,7 @@
 package spacemissioncontrol.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
@@ -17,14 +18,15 @@ public class Equipment {
     @Column(name = "equipment_id")
     private Integer id;
 
-    @Size(max = 100)
+    @Size(max = 100, message = "Equipment name must not exceed {max} characters")
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Size(max = 100)
+    @Size(max = 100, message = "Category must not exceed {max} characters")
     @Column(name = "category", nullable = false)
     private String category;
 
+    @Positive(message = "Weight must be positive")
     @Column(name = "weight_kg")
     private BigDecimal weightKg;
 

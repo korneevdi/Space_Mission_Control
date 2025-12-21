@@ -1,6 +1,7 @@
 package spacemissioncontrol.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 
@@ -11,9 +12,11 @@ public class MissionDetails {
     @Id
     private Integer id;
 
+    @Positive(message = "Budget must be positive")
     @Column(name = "budget_million_usd")
     private BigDecimal budgetMillionUSD;
 
+    @Positive(message = "Mission duration must be positive")
     @Column(name = "duration_days")
     private Integer durationDays;
 

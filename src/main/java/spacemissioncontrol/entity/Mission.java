@@ -21,14 +21,14 @@ public class Mission {
     private Integer id;
 
     @NotBlank
-    @Size(max = 100)
+    @Size(max = 100, message = "Mission name must not exceed {max} characters")
     @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "launch_date")
     private LocalDate launchDate;
 
-    @Size(max = 20)
+    @Size(max = 20, message = "Status must not exceed {max} characters")
     @Column(name = "status", nullable = false)
     private String status;
 

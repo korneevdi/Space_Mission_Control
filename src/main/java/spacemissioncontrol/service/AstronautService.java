@@ -12,6 +12,8 @@ import spacemissioncontrol.util.EntityValidator;
 import spacemissioncontrol.util.HibernateConfig;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -56,6 +58,14 @@ public class AstronautService extends AbstractService<Astronaut> {
             return;
         }
 
+        LocalDate realBirthDate;
+        try {
+            realBirthDate = LocalDate.parse(birthDate, DateTimeFormatter.ISO_LOCAL_DATE);
+        } catch (DateTimeParseException e) {
+            System.out.println("Date must be in format yyyy-MM-dd");
+            return;
+        }
+
         Session session = null;
         Transaction transaction = null;
 
@@ -66,7 +76,7 @@ public class AstronautService extends AbstractService<Astronaut> {
             boolean exists = astronautDao.existsByField(session, Map.of(
                     "firstName", firstName,
                     "lastName", lastName,
-                    "birthDate", LocalDate.parse(birthDate),
+                    "birthDate", realBirthDate,
                     "country", country
             ));
             if (exists) {
@@ -88,7 +98,7 @@ public class AstronautService extends AbstractService<Astronaut> {
             if (rank != null) {
                 astronaut.setRank(rank);
             }
-            astronaut.setBirthDate(LocalDate.parse(birthDate));
+            astronaut.setBirthDate(realBirthDate);
             astronaut.setCountry(country);
 
             Set<ConstraintViolation<Astronaut>> violations =

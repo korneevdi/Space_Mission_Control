@@ -17,22 +17,22 @@ public class Astronaut {
     @Column(name = "astronaut_id")
     private Integer id;
 
-    @Size(max = 50)
+    @Size(max = 50, message = "First name must not exceed {max} characters")
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Size(max = 50)
+    @Size(max = 50, message = "Last name must not exceed {max} characters")
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Size(max = 50)
+    @Size(max = 50, message = "Rank name must not exceed {max} characters")
     @Column(name = "rank")
     private String rank;
 
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
-    @Size(max = 50)
+    @Size(max = 50, message = "Country name must not exceed {max} characters")
     @Column(name = "country", nullable = false)
     private String country;
 
