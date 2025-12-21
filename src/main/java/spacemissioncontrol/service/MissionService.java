@@ -45,12 +45,7 @@ public class MissionService extends AbstractService<Mission> {
     public void showAllByNameLike(String nameLike) {
         try(Session session = HibernateConfig.getSessionFactory().openSession()) {
             List<Mission> missions = missionDao.findAllByNameLike(session, nameLike);
-
-            if(missions != null && !missions.isEmpty()) {
-                printList(missions);
-            } else {
-                System.out.println("No data found");
-            }
+            printNonEmptyList(missions, "No data found");
         }
     }
 

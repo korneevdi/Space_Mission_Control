@@ -32,13 +32,8 @@ public class SpaceshipService extends AbstractService<Spaceship> {
 
     public void showAllByMissionName(String missionName) {
         try(Session session = HibernateConfig.getSessionFactory().openSession()) {
-            List<Spaceship> list = spaceshipDao.findAllByMissionName(session, missionName);
-
-            if(list != null && !list.isEmpty()) {
-                printList(list);
-            } else {
-                System.out.println("No data found for mission " + missionName);
-            }
+            List<Spaceship> spaceships = spaceshipDao.findAllByMissionName(session, missionName);
+            printNonEmptyList(spaceships, "No data found for mission " + missionName);
         }
     }
 

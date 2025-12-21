@@ -32,25 +32,15 @@ public class EquipmentService extends AbstractService<Equipment> {
 
     public void showAllByMissionName(String missionName) {
         try(Session session = HibernateConfig.getSessionFactory().openSession()) {
-            List<Equipment> list = equipmentDao.findAllByMissionName(session, missionName);
-
-            if(list != null && !list.isEmpty()) {
-                printList(list);
-            } else {
-                System.out.println("No data found for mission " + missionName);
-            }
+            List<Equipment> equipment = equipmentDao.findAllByMissionName(session, missionName);
+            printNonEmptyList(equipment, "No data found for mission " + missionName);
         }
     }
 
     public void showAllByNameLike(String nameLike) {
         try(Session session = HibernateConfig.getSessionFactory().openSession()) {
-            List<Equipment> list = equipmentDao.findAllByNameLike(session, nameLike);
-
-            if(list != null && !list.isEmpty()) {
-                printList(list);
-            } else {
-                System.out.println("No data found");
-            }
+            List<Equipment> equipment = equipmentDao.findAllByNameLike(session, nameLike);
+            printNonEmptyList(equipment, "No data found");
         }
     }
 

@@ -2,6 +2,7 @@ package spacemissioncontrol.service;
 
 import org.hibernate.Session;
 import spacemissioncontrol.dao.AbstractDao;
+import spacemissioncontrol.entity.Astronaut;
 import spacemissioncontrol.util.HibernateConfig;
 
 import java.lang.reflect.Field;
@@ -66,9 +67,17 @@ public abstract class AbstractService<T> {
         }
     }
 
+    protected void printNonEmptyList(List<T> list, String message) {
+        if (list != null && !list.isEmpty()) {
+            printList(list);
+        } else {
+            System.out.println(message);
+        }
+    }
+
     protected void printList(List<T> list) {
-        for(T m : list) {
-            System.out.println(m);
+        for(T item : list) {
+            System.out.println(item);
         }
     }
 

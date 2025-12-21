@@ -1,7 +1,6 @@
 package spacemissioncontrol.service;
 
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import spacemissioncontrol.dao.AstronautDao;
@@ -35,13 +34,8 @@ public class AstronautService extends AbstractService<Astronaut> {
 
     public void showAllByMissionName(String missionName) {
         try (Session session = HibernateConfig.getSessionFactory().openSession()) {
-            List<Astronaut> list = astronautDao.findAllByMissionName(session, missionName);
-
-            if (list != null && !list.isEmpty()) {
-                printList(list);
-            } else {
-                System.out.println("No data found for mission " + missionName);
-            }
+            List<Astronaut> astronauts = astronautDao.findAllByMissionName(session, missionName);
+            printNonEmptyList(astronauts, "No data found for mission " + missionName);
         }
     }
 
