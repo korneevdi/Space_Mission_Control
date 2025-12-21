@@ -1,16 +1,19 @@
 package spacemissioncontrol.service;
 
+import jakarta.validation.ConstraintViolation;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import spacemissioncontrol.dao.EquipmentDao;
 import spacemissioncontrol.dao.MissionDao;
 import spacemissioncontrol.entity.Equipment;
 import spacemissioncontrol.entity.Mission;
+import spacemissioncontrol.util.EntityValidator;
 import spacemissioncontrol.util.HibernateConfig;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class EquipmentService extends AbstractService<Equipment> {
 
@@ -96,6 +99,18 @@ public class EquipmentService extends AbstractService<Equipment> {
                 equipment.setWeightKg(new BigDecimal(weightKg));
             }
             equipment.setMission(mission);
+
+            Set<ConstraintViolation<Equipment>> violations =
+                    EntityValidator.validate(equipment);
+            if (!violations.isEmpty()) {
+                for (ConstraintViolation<Equipment> e : violations) {
+                    System.out.println(
+                            "Field '" + e.getPropertyPath() +
+                                    "': " + e.getMessage()
+                    );
+                }
+                return;
+            }
 
             equipmentDao.insert(session, equipment);
 

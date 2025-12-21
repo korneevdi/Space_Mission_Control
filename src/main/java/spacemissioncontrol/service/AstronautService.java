@@ -1,16 +1,20 @@
 package spacemissioncontrol.service;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import spacemissioncontrol.dao.AstronautDao;
 import spacemissioncontrol.dao.MissionDao;
 import spacemissioncontrol.entity.Astronaut;
 import spacemissioncontrol.entity.Mission;
+import spacemissioncontrol.util.EntityValidator;
 import spacemissioncontrol.util.HibernateConfig;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class AstronautService extends AbstractService<Astronaut> {
 
@@ -86,6 +90,18 @@ public class AstronautService extends AbstractService<Astronaut> {
             }
             astronaut.setBirthDate(LocalDate.parse(birthDate));
             astronaut.setCountry(country);
+
+            Set<ConstraintViolation<Astronaut>> violations =
+                    EntityValidator.validate(astronaut);
+            if (!violations.isEmpty()) {
+                for (ConstraintViolation<Astronaut> v : violations) {
+                    System.out.println(
+                            "Field '" + v.getPropertyPath() +
+                                    "': " + v.getMessage()
+                    );
+                }
+                return;
+            }
 
             mission.addAstronaut(astronaut);
 

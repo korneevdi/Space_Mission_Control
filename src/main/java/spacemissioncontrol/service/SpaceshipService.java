@@ -1,16 +1,19 @@
 package spacemissioncontrol.service;
 
+import jakarta.validation.ConstraintViolation;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import spacemissioncontrol.dao.MissionDao;
 import spacemissioncontrol.dao.SpaceshipDao;
 import spacemissioncontrol.entity.Mission;
 import spacemissioncontrol.entity.Spaceship;
+import spacemissioncontrol.util.EntityValidator;
 import spacemissioncontrol.util.HibernateConfig;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class SpaceshipService extends AbstractService<Spaceship> {
 
@@ -85,6 +88,18 @@ public class SpaceshipService extends AbstractService<Spaceship> {
             }
             if(weightKg != null) {
                 spaceship.setWeightKg(new BigDecimal(weightKg));
+            }
+
+            Set<ConstraintViolation<Spaceship>> violations =
+                    EntityValidator.validate(spaceship);
+            if (!violations.isEmpty()) {
+                for (ConstraintViolation<Spaceship> s : violations) {
+                    System.out.println(
+                            "Field '" + s.getPropertyPath() +
+                                    "': " + s.getMessage()
+                    );
+                }
+                return;
             }
 
             mission.addSpaceship(spaceship);

@@ -1,16 +1,19 @@
 package spacemissioncontrol.service;
 
+import jakarta.validation.ConstraintViolation;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import spacemissioncontrol.dao.MissionDao;
 import spacemissioncontrol.entity.Mission;
 import spacemissioncontrol.entity.MissionDetails;
+import spacemissioncontrol.util.EntityValidator;
 import spacemissioncontrol.util.HibernateConfig;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class MissionService extends AbstractService<Mission> {
 
@@ -89,6 +92,18 @@ public class MissionService extends AbstractService<Mission> {
 
             mission.setMissionDetails(details);
             details.setMission(mission);
+
+            Set<ConstraintViolation<Mission>> violations =
+                    EntityValidator.validate(mission);
+            if (!violations.isEmpty()) {
+                for (ConstraintViolation<Mission> m : violations) {
+                    System.out.println(
+                            "Field '" + m.getPropertyPath() +
+                                    "': " + m.getMessage()
+                    );
+                }
+                return;
+            }
 
             missionDao.insert(session, mission);
 
