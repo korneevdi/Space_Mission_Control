@@ -2,6 +2,7 @@ package spacemissioncontrol.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
@@ -26,7 +27,7 @@ public class Spaceship {
     @Column(name = "manufacturer")
     private String manufacturer;
 
-    @Positive(message = "Spaceship capacity must be positive")
+    @PositiveOrZero(message = "Spaceship capacity must be non-negative")
     @Column(name = "capacity")
     private Integer capacity;
 
@@ -93,8 +94,9 @@ public class Spaceship {
                     ID: %s,
                     Model: %s,
                     Manufacturer: %s,
+                    Capacity: %s,
                     Weight: %s kg
-                """.formatted(id, model, manufacturer, weightKg);
+                """.formatted(id, model, manufacturer, capacity, weightKg);
     }
 
     @Override

@@ -22,7 +22,7 @@ public class Mission {
 
     @NotBlank
     @Size(max = 100, message = "Mission name must not exceed {max} characters")
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
     @Column(name = "launch_date")
