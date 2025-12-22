@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintViolation;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import spacemissioncontrol.dao.MissionDao;
+import spacemissioncontrol.entity.Astronaut;
 import spacemissioncontrol.entity.Mission;
 import spacemissioncontrol.entity.MissionDetails;
 import spacemissioncontrol.util.EntityValidator;
@@ -15,7 +16,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class MissionService extends AbstractService<Mission> {
 
@@ -72,9 +75,9 @@ public class MissionService extends AbstractService<Mission> {
             session = HibernateConfig.getSessionFactory().openSession();
             transaction = session.beginTransaction();
 
-            boolean exists = missionDao.existsByField(session, Map.of("name", name));
-            if(exists) {
-                System.out.println("Mission with name '" + name + "' already exists");
+            Optional<Integer> optId = findId(session, name);
+            if(optId.isPresent()) {
+                System.out.println("This mission already exists");
                 transaction.rollback();
                 return;
             }
@@ -96,15 +99,8 @@ public class MissionService extends AbstractService<Mission> {
             mission.setMissionDetails(details);
             details.setMission(mission);
 
-            Set<ConstraintViolation<Mission>> violations =
-                    EntityValidator.validate(mission);
-            if (!violations.isEmpty()) {
-                for (ConstraintViolation<Mission> m : violations) {
-                    System.out.println(
-                            "Field '" + m.getPropertyPath() +
-                                    "': " + m.getMessage()
-                    );
-                }
+            if(!isValidEntity(mission)) {
+                transaction.rollback();
                 return;
             }
 
@@ -121,6 +117,126 @@ public class MissionService extends AbstractService<Mission> {
                 session.close();
             }
         }
+    }
+
+    public void updateName(String name, String newName) {
+        if(newName == null) {
+            System.out.println("New name should be specified");
+            return;
+        }
+        if(name.equals(newName)) {
+            System.out.println("Old name and new name are identical. Nothing to update");
+            return;
+        }
+        updateMission(name,
+                mission -> mission.setName(newName));
+    }
+
+    public void updateLaunchDate(String name, String newLaunchDate) {
+        if(newLaunchDate == null) {
+            System.out.println("New launch date should be specified");
+            return;
+        }
+        LocalDate realNewLaunchDate;
+        try {
+            realNewLaunchDate = LocalDate.parse(newLaunchDate, DateTimeFormatter.ISO_LOCAL_DATE);
+        } catch (DateTimeParseException e) {
+            System.out.println("New launch date must be in format yyyy-MM-dd");
+            return;
+        }
+        updateMission(name,
+                mission -> mission.setLaunchDate(realNewLaunchDate));
+    }
+
+    public void updateStatus(String name, String newStatus) {
+        if(newStatus == null) {
+            System.out.println("New status should be specified");
+            return;
+        }
+        updateMission(name,
+                mission -> mission.setStatus(newStatus));
+    }
+
+    public void updateBudget(String name, Double newBudgetMillionUSD) {
+        if(newBudgetMillionUSD == null || newBudgetMillionUSD < 0) {
+            System.out.println("New budget should be specified and be non-negative");
+            return;
+        }
+        updateMission(name,
+                mission -> mission.getMissionDetails().setBudgetMillionUSD(new BigDecimal(newBudgetMillionUSD)));
+    }
+
+    public void updateDuration(String name, Integer newDuration) {
+        if(newDuration == null || newDuration < 0) {
+            System.out.println("New duration should be specified and be non-negative");
+            return;
+        }
+        updateMission(name,
+                mission -> mission.getMissionDetails().setDurationDays(newDuration));
+    }
+
+    public void updateDescription(String name, String newDescription) {
+        if(newDescription == null) {
+            System.out.println("New description should be specified");
+            return;
+        }
+        updateMission(name,
+                mission -> mission.getMissionDetails().setDescription(newDescription));
+    }
+
+    private void updateMission(String name, Consumer<Mission> updater){
+
+        if (name == null) {
+            System.out.println("Missing data. Mission name should be specified");
+            return;
+        }
+
+        Session session = null;
+        Transaction transaction = null;
+
+        try{
+            session = HibernateConfig.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+
+            Optional<Integer> optId = findId(
+                    session,
+                    name
+            );
+
+            if (optId.isEmpty()) {
+                System.out.println("This mission does not exist");
+                transaction.rollback();
+                return;
+            }
+
+            Mission mission = dao.findById(session, optId.get())
+                    .orElseThrow();
+
+            updater.accept(mission);
+
+            if(!isValidEntity(mission)) {
+                transaction.rollback();
+                return;
+            }
+
+            transaction.commit();
+
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw e;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
+    private Optional<Integer> findId(Session session, String name) {
+        return dao.findIdByFields(session, Map.of(
+                "name", name
+        ));
     }
 
     private void printMissionsWithDetails(List<Mission> list) {

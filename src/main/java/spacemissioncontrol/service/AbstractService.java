@@ -1,14 +1,19 @@
 package spacemissioncontrol.service;
 
+import jakarta.validation.ConstraintViolation;
 import org.hibernate.Session;
 import spacemissioncontrol.dao.AbstractDao;
 import spacemissioncontrol.entity.Astronaut;
+import spacemissioncontrol.util.EntityValidator;
 import spacemissioncontrol.util.HibernateConfig;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public abstract class AbstractService<T> {
 
@@ -21,26 +26,15 @@ public abstract class AbstractService<T> {
     public void showAll() {
         try(Session session = HibernateConfig.getSessionFactory().openSession()) {
             List<T> allItems = dao.findAll(session);
-
-            if(allItems != null && !allItems.isEmpty()) {
-                printList(allItems);
-            } else {
-                System.out.println("No data found");
-            }
+            printNonEmptyList(allItems, "No data found");
         }
     }
 
     public void showAllByField(String fieldName, String rawValue) {
         try(Session session = HibernateConfig.getSessionFactory().openSession()) {
             Object value = convertValue(fieldName, rawValue);
-
-            List<T> allItems = dao.findAllByField(session, fieldName, value);
-
-            if(allItems != null && !allItems.isEmpty()) {
-                printList(allItems);
-            } else {
-                System.out.println("No data found");
-            }
+            List<T> allItems = dao.findAllByFields(session, Map.of(fieldName, value));
+            printNonEmptyList(allItems, "No data found");
         }
     }
 
@@ -65,6 +59,21 @@ public abstract class AbstractService<T> {
         } catch (NoSuchFieldException e) {
             throw new IllegalArgumentException("Field of unknown type: " + fieldName, e);
         }
+    }
+
+    protected boolean isValidEntity(T entity) {
+        Set<ConstraintViolation<T>> violations =
+                EntityValidator.validate(entity);
+        if (!violations.isEmpty()) {
+            for (ConstraintViolation<T> e : violations) {
+                System.out.println(
+                        "Field '" + e.getPropertyPath() +
+                                "': " + e.getMessage()
+                );
+            }
+            return false;
+        }
+        return true;
     }
 
     protected void printNonEmptyList(List<T> list, String message) {

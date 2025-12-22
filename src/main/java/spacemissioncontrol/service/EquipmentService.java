@@ -1,19 +1,18 @@
 package spacemissioncontrol.service;
 
-import jakarta.validation.ConstraintViolation;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import spacemissioncontrol.dao.EquipmentDao;
 import spacemissioncontrol.dao.MissionDao;
 import spacemissioncontrol.entity.Equipment;
 import spacemissioncontrol.entity.Mission;
-import spacemissioncontrol.util.EntityValidator;
 import spacemissioncontrol.util.HibernateConfig;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 public class EquipmentService extends AbstractService<Equipment> {
 
@@ -63,17 +62,14 @@ public class EquipmentService extends AbstractService<Equipment> {
             session = HibernateConfig.getSessionFactory().openSession();
             transaction = session.beginTransaction();
 
-            boolean exists = equipmentDao.existsByField(session, Map.of(
-                    "name", name,
-                    "category", category
-            ));
-            if(exists) {
-                System.out.println("This equipment unit already exists");
+            Optional<Integer> optId = findId(session, name, category);
+            if(optId.isPresent()) {
+                System.out.println("This equipment already exists");
                 transaction.rollback();
                 return;
             }
 
-            Mission mission = missionDao.findAllByField(session, "name", missionName)
+            Mission mission = missionDao.findAllByFields(session, Map.of("name", missionName))
                     .stream()
                     .findFirst()
                     .orElseThrow(
@@ -90,15 +86,8 @@ public class EquipmentService extends AbstractService<Equipment> {
             }
             equipment.setMission(mission);
 
-            Set<ConstraintViolation<Equipment>> violations =
-                    EntityValidator.validate(equipment);
-            if (!violations.isEmpty()) {
-                for (ConstraintViolation<Equipment> e : violations) {
-                    System.out.println(
-                            "Field '" + e.getPropertyPath() +
-                                    "': " + e.getMessage()
-                    );
-                }
+            if(!isValidEntity(equipment)) {
+                transaction.rollback();
                 return;
             }
 
@@ -115,5 +104,97 @@ public class EquipmentService extends AbstractService<Equipment> {
                 session.close();
             }
         }
+    }
+
+    public void updateName(String name, String category, String newName) {
+        if(newName == null) {
+            System.out.println("New name should be specified");
+            return;
+        }
+        if(name.equals(newName)) {
+            System.out.println("Old name and new name are identical. Nothing to update");
+            return;
+        }
+        updateEquipment(name, category,
+                equipment -> equipment.setName(newName));
+    }
+
+    public void updateCategory(String name, String category, String newCategory) {
+        if(newCategory == null) {
+            System.out.println("New category should be specified");
+            return;
+        }
+        if(category.equals(newCategory)) {
+            System.out.println("Old category and new category are identical. Nothing to update");
+            return;
+        }
+        updateEquipment(name, category,
+                equipment -> equipment.setCategory(newCategory));
+    }
+
+    public void updateWeight(String name, String category, Double newWeight) {
+        if(newWeight == null || newWeight < 0) {
+            System.out.println("New weight should be specified and be non-negative");
+            return;
+        }
+        updateEquipment(name, category,
+                equipment -> equipment.setWeightKg(new BigDecimal(newWeight)));
+    }
+
+    private void updateEquipment(String name, String category, Consumer<Equipment> updater){
+
+        if (name == null || category == null) {
+            System.out.println("Missing data. Name and category should be specified");
+            return;
+        }
+
+        Session session = null;
+        Transaction transaction = null;
+
+        try{
+            session = HibernateConfig.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+
+            Optional<Integer> optId = findId(
+                    session,
+                    name,
+                    category
+            );
+
+            if (optId.isEmpty()) {
+                System.out.println("This equipment does not exist");
+                transaction.rollback();
+                return;
+            }
+
+            Equipment equipment = dao.findById(session, optId.get())
+                    .orElseThrow();
+
+            updater.accept(equipment);
+
+            if(!isValidEntity(equipment)) {
+                transaction.rollback();
+                return;
+            }
+
+            transaction.commit();
+
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw e;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
+    private Optional<Integer> findId(Session session, String name, String category) {
+        return dao.findIdByFields(session, Map.of(
+                "name", name,
+                "category", category
+        ));
     }
 }
