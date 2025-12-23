@@ -197,6 +197,51 @@ public class SpaceshipService extends AbstractService<Spaceship> {
         }
     }
 
+    public void delete(String model, String manufacturer) {
+
+        Session session = null;
+        Transaction transaction = null;
+
+        try{
+            session = HibernateConfig.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+
+            Optional<Integer> optId = findId(
+                    session,
+                    model,
+                    manufacturer
+            );
+
+            if (optId.isEmpty()) {
+                System.out.println("This spaceship does not exist");
+                transaction.rollback();
+                return;
+            }
+
+            Spaceship spaceship = dao.findById(session, optId.get())
+                    .orElseThrow(() -> new IllegalArgumentException("Not found"));
+
+            for(Mission m : spaceship.getMissionList()) {
+                m.getSpaceshipList().remove(spaceship);
+            }
+
+            spaceship.getMissionList().clear();
+
+            dao.delete(session, spaceship);
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw e;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
     private Optional<Integer> findId(Session session, String model, String manufacturer) {
         return dao.findIdByFields(session, Map.of(
                 "model", model,

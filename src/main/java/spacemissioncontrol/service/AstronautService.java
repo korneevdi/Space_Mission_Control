@@ -245,6 +245,61 @@ public class AstronautService extends AbstractService<Astronaut> {
         }
     }
 
+    public void delete(String firstName, String lastName, String birthDate, String country) {
+
+        LocalDate realBirthDate;
+        try {
+            realBirthDate = LocalDate.parse(birthDate, DateTimeFormatter.ISO_LOCAL_DATE);
+        } catch (DateTimeParseException e) {
+            System.out.println("Date must be in format yyyy-MM-dd");
+            return;
+        }
+
+        Session session = null;
+        Transaction transaction = null;
+
+        try{
+            session = HibernateConfig.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+
+            Optional<Integer> optId = findId(
+                    session,
+                    firstName,
+                    lastName,
+                    realBirthDate,
+                    country
+            );
+
+            if (optId.isEmpty()) {
+                System.out.println("This astronaut does not exist");
+                transaction.rollback();
+                return;
+            }
+
+            Astronaut astronaut = dao.findById(session, optId.get())
+                    .orElseThrow(() -> new IllegalArgumentException("Not found"));
+
+            for(Mission m : astronaut.getMissionList()) {
+                m.getAstronautList().remove(astronaut);
+            }
+
+            astronaut.getMissionList().clear();
+
+            dao.delete(session, astronaut);
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw e;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
     private Optional<Integer> findId(Session session, String firstName, String lastName,
                                      LocalDate birthDate, String country) {
         return dao.findIdByFields(session, Map.of(

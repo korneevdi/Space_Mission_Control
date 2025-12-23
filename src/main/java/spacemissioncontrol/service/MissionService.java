@@ -1,13 +1,12 @@
 package spacemissioncontrol.service;
 
-import jakarta.validation.ConstraintViolation;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import spacemissioncontrol.dao.MissionDao;
 import spacemissioncontrol.entity.Astronaut;
 import spacemissioncontrol.entity.Mission;
 import spacemissioncontrol.entity.MissionDetails;
-import spacemissioncontrol.util.EntityValidator;
+import spacemissioncontrol.entity.Spaceship;
 import spacemissioncontrol.util.HibernateConfig;
 
 import java.math.BigDecimal;
@@ -17,7 +16,6 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Consumer;
 
 public class MissionService extends AbstractService<Mission> {
@@ -221,6 +219,59 @@ public class MissionService extends AbstractService<Mission> {
 
             transaction.commit();
 
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw e;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
+    public void delete(String missionName) {
+
+        Session session = null;
+        Transaction transaction = null;
+
+        try{
+            session = HibernateConfig.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+
+            Optional<Integer> optId = findId(
+                    session,
+                    missionName
+            );
+
+            if (optId.isEmpty()) {
+                System.out.println("This mission does not exist");
+                transaction.rollback();
+                return;
+            }
+
+            Mission mission = dao.findById(session, optId.get())
+                    .orElseThrow(() -> new IllegalArgumentException("Not found"));
+
+            // Remove relationships to astronauts
+            for(Astronaut a : mission.getAstronautList()) {
+                a.getMissionList().remove(mission);
+            }
+            mission.getAstronautList().clear();
+
+            // Remove relationships to spaceships
+            for(Spaceship s : mission.getSpaceshipList()) {
+                s.getMissionList().remove(mission);
+            }
+            mission.getSpaceshipList().clear();
+
+            // Remove relationships to equipment
+            mission.getEquipmentList().clear();
+
+            dao.delete(session, mission);
+
+            transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();

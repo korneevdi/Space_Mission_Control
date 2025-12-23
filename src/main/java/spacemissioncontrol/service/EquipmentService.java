@@ -191,6 +191,45 @@ public class EquipmentService extends AbstractService<Equipment> {
         }
     }
 
+    public void delete(String name, String category) {
+
+        Session session = null;
+        Transaction transaction = null;
+
+        try{
+            session = HibernateConfig.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+
+            Optional<Integer> optId = findId(
+                    session,
+                    name,
+                    category
+            );
+
+            if (optId.isEmpty()) {
+                System.out.println("This equipment does not exist");
+                transaction.rollback();
+                return;
+            }
+
+            Equipment equipment = dao.findById(session, optId.get())
+                    .orElseThrow(() -> new IllegalArgumentException("Not found"));
+
+            dao.delete(session, equipment);
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw e;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
     private Optional<Integer> findId(Session session, String name, String category) {
         return dao.findIdByFields(session, Map.of(
                 "name", name,

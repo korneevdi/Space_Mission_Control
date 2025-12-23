@@ -14,7 +14,7 @@ public class Main {
             System.out.println("Hibernate started!");
 
             MissionService missionService = new MissionService();
-            //missionService.showAll();
+            missionService.showAll();
             //missionService.showAllWithDetails();
             //missionService.showAllByField("name", "artemis i");
             //missionService.showAllByNameLike("crew");
@@ -25,8 +25,7 @@ public class Main {
             //missionService.updateBudget("Another mission", 12.0);
             //missionService.updateDuration("New mission", 122);
             //missionService.updateDescription("Another mission", "Orbital lunar crewed flight");
-
-            //missionService.delete();
+            //missionService.delete("New mission");
 
             AstronautService astronautService = new AstronautService();
             //astronautService.showAll();
@@ -38,8 +37,7 @@ public class Main {
             //astronautService.updateRank("Andrey", "Fedyaev", "1981-02-26", "Russia", "Spec");
             //astronautService.updateBirthDate("Andrey", "Fedyaev", "1981-02-28", "Russia", "1981-02-26");
             //astronautService.updateCountry("Andrey", "Fedyaev", "1981-02-26", "Russia", "Serbia");
-
-            //astronautService.delete();
+            //astronautService.delete("Stephen", "Bowen", "1964-02-13", "USA");
 
             SpaceshipService spaceshipService = new SpaceshipService();
             //spaceshipService.showAll();
@@ -50,8 +48,7 @@ public class Main {
             //spaceshipService.updateManufacturer("Ariane 5 ESA", "Arianespace", "ArianespaceX");
             //spaceshipService.updateCapacity("Ariane 5 ESA", "ArianespaceX", 45);
             //spaceshipService.updateWeight("Ariane 5 ESA", "ArianespaceX", 15500.0);
-
-            //spaceshipService.delete();
+            //spaceshipService.delete("Ariane 5 ESA", "ArianespaceX");
 
             EquipmentService equipmentService = new EquipmentService();
             //equipmentService.showAll();
@@ -62,8 +59,7 @@ public class Main {
             //equipmentService.updateName("Telescope mirror", "science", "Engine");
             //equipmentService.updateCategory("Engine", "science", "sport");
             //equipmentService.updateWeight("Engine", "sport", 11820.0);
-
-            //equipmentService.delete();
+            //equipmentService.delete("Engine", "sport");
         }
     }
 }

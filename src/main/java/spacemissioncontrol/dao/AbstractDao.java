@@ -69,23 +69,8 @@ public abstract class AbstractDao<T> {
         session.merge(entity);
     }
 
-    public boolean existsByField(Session session, Map<String, Object> fieldsAndValues) {
-        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        Root<T> root = criteriaQuery.from(entityClass);
-
-        List<Predicate> predicates = new ArrayList<>();
-
-        for(Map.Entry<String, Object> entry : fieldsAndValues.entrySet()) {
-            predicates.add(criteriaBuilder.equal(root.get(entry.getKey()), entry.getValue()));
-        }
-
-        criteriaQuery.select(criteriaBuilder.count(root))
-                .where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
-
-        Long count = session.createQuery(criteriaQuery).getSingleResult();
-
-        return count > 0;
+    public void delete(Session session, T entity) {
+        session.remove(entity);
     }
 
     public Optional<Integer> findIdByFields(Session session, Map<String, Object> fieldsAndValues) {
