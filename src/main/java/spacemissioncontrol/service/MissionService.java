@@ -32,10 +32,10 @@ public class MissionService extends AbstractService<Mission> {
     }
 
     public void showAllWithDetails() {
-        try(Session session = HibernateConfig.getSessionFactory().openSession()) {
+        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
             List<Mission> missions = missionDao.findAllWithDetails(session);
 
-            if(missions != null && !missions.isEmpty()) {
+            if (missions != null && !missions.isEmpty()) {
                 printMissionsWithDetails(missions);
             } else {
                 System.out.println("No data found");
@@ -44,16 +44,16 @@ public class MissionService extends AbstractService<Mission> {
     }
 
     public void showAllByNameLike(String nameLike) {
-        try(Session session = HibernateConfig.getSessionFactory().openSession()) {
+        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
             List<Mission> missions = missionDao.findAllByNameLike(session, nameLike);
             printNonEmptyList(missions, "No data found");
         }
     }
 
     public void addNew(String name, String launchDate, String status, String budgetMillionUSD,
-                    Integer durationDays, String description) {
+                       Integer durationDays, String description) {
 
-        if(name == null || status == null || description == null) {
+        if (name == null || status == null || description == null) {
             System.out.println("Required data missing. Mission name, status, and description should be specified");
             return;
         }
@@ -74,7 +74,7 @@ public class MissionService extends AbstractService<Mission> {
             transaction = session.beginTransaction();
 
             Optional<Integer> optId = findId(session, name);
-            if(optId.isPresent()) {
+            if (optId.isPresent()) {
                 System.out.println("This mission already exists");
                 transaction.rollback();
                 return;
@@ -86,10 +86,10 @@ public class MissionService extends AbstractService<Mission> {
             mission.setStatus(status);
 
             MissionDetails details = new MissionDetails();
-            if(budgetMillionUSD != null) {
+            if (budgetMillionUSD != null) {
                 details.setBudgetMillionUSD(new BigDecimal(budgetMillionUSD));
             }
-            if(durationDays != null) {
+            if (durationDays != null) {
                 details.setDurationDays(durationDays);
             }
             details.setDescription(description);
@@ -97,7 +97,7 @@ public class MissionService extends AbstractService<Mission> {
             mission.setMissionDetails(details);
             details.setMission(mission);
 
-            if(!isValidEntity(mission)) {
+            if (!isValidEntity(mission)) {
                 transaction.rollback();
                 return;
             }
@@ -106,23 +106,23 @@ public class MissionService extends AbstractService<Mission> {
 
             transaction.commit();
         } catch (Exception e) {
-            if(transaction != null) {
+            if (transaction != null) {
                 transaction.rollback();
             }
             throw e;
         } finally {
-            if(session != null) {
+            if (session != null) {
                 session.close();
             }
         }
     }
 
     public void updateName(String name, String newName) {
-        if(newName == null) {
+        if (newName == null) {
             System.out.println("New name should be specified");
             return;
         }
-        if(name.equals(newName)) {
+        if (name.equals(newName)) {
             System.out.println("Old name and new name are identical. Nothing to update");
             return;
         }
@@ -131,7 +131,7 @@ public class MissionService extends AbstractService<Mission> {
     }
 
     public void updateLaunchDate(String name, String newLaunchDate) {
-        if(newLaunchDate == null) {
+        if (newLaunchDate == null) {
             System.out.println("New launch date should be specified");
             return;
         }
@@ -147,7 +147,7 @@ public class MissionService extends AbstractService<Mission> {
     }
 
     public void updateStatus(String name, String newStatus) {
-        if(newStatus == null) {
+        if (newStatus == null) {
             System.out.println("New status should be specified");
             return;
         }
@@ -156,7 +156,7 @@ public class MissionService extends AbstractService<Mission> {
     }
 
     public void updateBudget(String name, Double newBudgetMillionUSD) {
-        if(newBudgetMillionUSD == null || newBudgetMillionUSD < 0) {
+        if (newBudgetMillionUSD == null || newBudgetMillionUSD < 0) {
             System.out.println("New budget should be specified and be non-negative");
             return;
         }
@@ -165,7 +165,7 @@ public class MissionService extends AbstractService<Mission> {
     }
 
     public void updateDuration(String name, Integer newDuration) {
-        if(newDuration == null || newDuration < 0) {
+        if (newDuration == null || newDuration < 0) {
             System.out.println("New duration should be specified and be non-negative");
             return;
         }
@@ -174,7 +174,7 @@ public class MissionService extends AbstractService<Mission> {
     }
 
     public void updateDescription(String name, String newDescription) {
-        if(newDescription == null) {
+        if (newDescription == null) {
             System.out.println("New description should be specified");
             return;
         }
@@ -182,7 +182,7 @@ public class MissionService extends AbstractService<Mission> {
                 mission -> mission.getMissionDetails().setDescription(newDescription));
     }
 
-    private void updateMission(String name, Consumer<Mission> updater){
+    private void updateMission(String name, Consumer<Mission> updater) {
 
         if (name == null) {
             System.out.println("Missing data. Mission name should be specified");
@@ -192,7 +192,7 @@ public class MissionService extends AbstractService<Mission> {
         Session session = null;
         Transaction transaction = null;
 
-        try{
+        try {
             session = HibernateConfig.getSessionFactory().openSession();
             transaction = session.beginTransaction();
 
@@ -212,7 +212,7 @@ public class MissionService extends AbstractService<Mission> {
 
             updater.accept(mission);
 
-            if(!isValidEntity(mission)) {
+            if (!isValidEntity(mission)) {
                 transaction.rollback();
                 return;
             }
@@ -236,7 +236,7 @@ public class MissionService extends AbstractService<Mission> {
         Session session = null;
         Transaction transaction = null;
 
-        try{
+        try {
             session = HibernateConfig.getSessionFactory().openSession();
             transaction = session.beginTransaction();
 
@@ -255,13 +255,13 @@ public class MissionService extends AbstractService<Mission> {
                     .orElseThrow(() -> new IllegalArgumentException("Not found"));
 
             // Remove relationships to astronauts
-            for(Astronaut a : mission.getAstronautList()) {
+            for (Astronaut a : mission.getAstronautList()) {
                 a.getMissionList().remove(mission);
             }
             mission.getAstronautList().clear();
 
             // Remove relationships to spaceships
-            for(Spaceship s : mission.getSpaceshipList()) {
+            for (Spaceship s : mission.getSpaceshipList()) {
                 s.getMissionList().remove(mission);
             }
             mission.getSpaceshipList().clear();
@@ -291,11 +291,11 @@ public class MissionService extends AbstractService<Mission> {
     }
 
     private void printMissionsWithDetails(List<Mission> list) {
-        for(Mission m : list) {
+        for (Mission m : list) {
             System.out.print(m);
 
             MissionDetails details = m.getMissionDetails();
-            if(details != null) {
+            if (details != null) {
                 System.out.println("    Budget: " + details.getBudgetMillionUSD() + " Mio. USD");
                 System.out.println("    Duration: " + details.getDurationDays() + " days");
                 System.out.println("    Description: " + details.getDescription() + "\n");

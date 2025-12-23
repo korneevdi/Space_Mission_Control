@@ -10,7 +10,7 @@ import java.util.Objects;
 @Entity
 @Table(
         name = "equipment",
-uniqueConstraints = @UniqueConstraint(columnNames = {"name", "category"}))
+        uniqueConstraints = @UniqueConstraint(columnNames = {"name", "category"}))
 public class Equipment {
 
     @Id

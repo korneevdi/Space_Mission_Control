@@ -80,7 +80,7 @@ public abstract class AbstractDao<T> {
 
         List<Predicate> predicates = new ArrayList<>();
 
-        for(Map.Entry<String, Object> entry : fieldsAndValues.entrySet()) {
+        for (Map.Entry<String, Object> entry : fieldsAndValues.entrySet()) {
             predicates.add(criteriaBuilder.equal(root.get(entry.getKey()), entry.getValue()));
         }
 
@@ -89,7 +89,7 @@ public abstract class AbstractDao<T> {
 
         List<Integer> result = session.createQuery(criteriaQuery).getResultList();
 
-        if(result.isEmpty()) {
+        if (result.isEmpty()) {
             return Optional.empty();
         }
         return Optional.of(result.get(0));

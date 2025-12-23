@@ -14,7 +14,7 @@ public class Main {
             System.out.println("Hibernate started!");
 
             MissionService missionService = new MissionService();
-            missionService.showAll();
+            //missionService.showAll();
             //missionService.showAllWithDetails();
             //missionService.showAllByField("name", "artemis i");
             //missionService.showAllByNameLike("crew");

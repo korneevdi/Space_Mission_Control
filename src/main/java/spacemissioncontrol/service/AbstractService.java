@@ -3,7 +3,6 @@ package spacemissioncontrol.service;
 import jakarta.validation.ConstraintViolation;
 import org.hibernate.Session;
 import spacemissioncontrol.dao.AbstractDao;
-import spacemissioncontrol.entity.Astronaut;
 import spacemissioncontrol.util.EntityValidator;
 import spacemissioncontrol.util.HibernateConfig;
 
@@ -12,7 +11,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 public abstract class AbstractService<T> {
@@ -24,14 +22,14 @@ public abstract class AbstractService<T> {
     }
 
     public void showAll() {
-        try(Session session = HibernateConfig.getSessionFactory().openSession()) {
+        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
             List<T> allItems = dao.findAll(session);
             printNonEmptyList(allItems, "No data found");
         }
     }
 
     public void showAllByField(String fieldName, String rawValue) {
-        try(Session session = HibernateConfig.getSessionFactory().openSession()) {
+        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
             Object value = convertValue(fieldName, rawValue);
             List<T> allItems = dao.findAllByFields(session, Map.of(fieldName, value));
             printNonEmptyList(allItems, "No data found");
@@ -39,19 +37,19 @@ public abstract class AbstractService<T> {
     }
 
     private Object convertValue(String fieldName, String rawValue) {
-        try{
+        try {
             Field field = getEntityClass().getDeclaredField(fieldName);
             Class<?> fieldType = field.getType();
 
-            if(fieldType.equals(LocalDate.class)) {
+            if (fieldType.equals(LocalDate.class)) {
                 return LocalDate.parse(rawValue);
             }
 
-            if(fieldType.equals(Integer.class) || fieldType.equals(int.class)) {
+            if (fieldType.equals(Integer.class) || fieldType.equals(int.class)) {
                 return Integer.parseInt(rawValue);
             }
 
-            if(fieldType.equals(BigDecimal.class)) {
+            if (fieldType.equals(BigDecimal.class)) {
                 return new BigDecimal(rawValue);
             }
 
@@ -85,7 +83,7 @@ public abstract class AbstractService<T> {
     }
 
     protected void printList(List<T> list) {
-        for(T item : list) {
+        for (T item : list) {
             System.out.println(item);
         }
     }

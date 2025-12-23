@@ -30,7 +30,7 @@ public class SpaceshipService extends AbstractService<Spaceship> {
     }
 
     public void showAllByMissionName(String missionName) {
-        try(Session session = HibernateConfig.getSessionFactory().openSession()) {
+        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
             List<Spaceship> spaceships = spaceshipDao.findAllByMissionName(session, missionName);
             printNonEmptyList(spaceships, "No data found for mission " + missionName);
         }
@@ -38,12 +38,12 @@ public class SpaceshipService extends AbstractService<Spaceship> {
 
     public void addNew(String model, String manufacturer, Integer capacity, String weightKg, String missionName) {
 
-        if(missionName == null) {
+        if (missionName == null) {
             System.out.println("Required data missing. Mission name should be specified");
             return;
         }
 
-        if(model == null) {
+        if (model == null) {
             System.out.println("Required data missing. Model should be specified");
             return;
         }
@@ -56,7 +56,7 @@ public class SpaceshipService extends AbstractService<Spaceship> {
             transaction = session.beginTransaction();
 
             Optional<Integer> optId = findId(session, model, manufacturer);
-            if(optId.isPresent()) {
+            if (optId.isPresent()) {
                 System.out.println("This spaceship already exists");
                 transaction.rollback();
                 return;
@@ -71,17 +71,17 @@ public class SpaceshipService extends AbstractService<Spaceship> {
 
             Spaceship spaceship = new Spaceship();
             spaceship.setModel(model);
-            if(manufacturer != null) {
+            if (manufacturer != null) {
                 spaceship.setManufacturer(manufacturer);
             }
-            if(capacity != null) {
+            if (capacity != null) {
                 spaceship.setCapacity(capacity);
             }
-            if(weightKg != null) {
+            if (weightKg != null) {
                 spaceship.setWeightKg(new BigDecimal(weightKg));
             }
 
-            if(!isValidEntity(spaceship)) {
+            if (!isValidEntity(spaceship)) {
                 transaction.rollback();
                 return;
             }
@@ -92,23 +92,23 @@ public class SpaceshipService extends AbstractService<Spaceship> {
 
             transaction.commit();
         } catch (Exception e) {
-            if(transaction != null) {
+            if (transaction != null) {
                 transaction.rollback();
             }
             throw e;
         } finally {
-            if(session != null) {
+            if (session != null) {
                 session.close();
             }
         }
     }
 
     public void updateModel(String model, String manufacturer, String newModel) {
-        if(newModel == null) {
+        if (newModel == null) {
             System.out.println("New model should be specified");
             return;
         }
-        if(model.equals(newModel)) {
+        if (model.equals(newModel)) {
             System.out.println("Old model and new model are identical. Nothing to update");
             return;
         }
@@ -117,11 +117,11 @@ public class SpaceshipService extends AbstractService<Spaceship> {
     }
 
     public void updateManufacturer(String model, String manufacturer, String newManufacturer) {
-        if(newManufacturer == null) {
+        if (newManufacturer == null) {
             System.out.println("New manufacturer should be specified");
             return;
         }
-        if(manufacturer.equals(newManufacturer)) {
+        if (manufacturer.equals(newManufacturer)) {
             System.out.println("Old manufacturer and new manufacturer are identical. Nothing to update");
             return;
         }
@@ -130,7 +130,7 @@ public class SpaceshipService extends AbstractService<Spaceship> {
     }
 
     public void updateCapacity(String model, String manufacturer, Integer newCapacity) {
-        if(newCapacity == null || newCapacity < 0) {
+        if (newCapacity == null || newCapacity < 0) {
             System.out.println("New capacity should be specified and be non-negative");
             return;
         }
@@ -139,7 +139,7 @@ public class SpaceshipService extends AbstractService<Spaceship> {
     }
 
     public void updateWeight(String model, String manufacturer, Double newWeight) {
-        if(newWeight == null || newWeight < 0) {
+        if (newWeight == null || newWeight < 0) {
             System.out.println("New weight should be specified and be non-negative");
             return;
         }
@@ -147,7 +147,7 @@ public class SpaceshipService extends AbstractService<Spaceship> {
                 spaceship -> spaceship.setWeightKg(new BigDecimal(newWeight)));
     }
 
-    private void updateSpaceship(String model, String manufacturer, Consumer<Spaceship> updater){
+    private void updateSpaceship(String model, String manufacturer, Consumer<Spaceship> updater) {
 
         if (model == null || manufacturer == null) {
             System.out.println("Missing data. Model and manufacturer should be specified");
@@ -157,7 +157,7 @@ public class SpaceshipService extends AbstractService<Spaceship> {
         Session session = null;
         Transaction transaction = null;
 
-        try{
+        try {
             session = HibernateConfig.getSessionFactory().openSession();
             transaction = session.beginTransaction();
 
@@ -178,7 +178,7 @@ public class SpaceshipService extends AbstractService<Spaceship> {
 
             updater.accept(spaceship);
 
-            if(!isValidEntity(spaceship)) {
+            if (!isValidEntity(spaceship)) {
                 transaction.rollback();
                 return;
             }
@@ -202,7 +202,7 @@ public class SpaceshipService extends AbstractService<Spaceship> {
         Session session = null;
         Transaction transaction = null;
 
-        try{
+        try {
             session = HibernateConfig.getSessionFactory().openSession();
             transaction = session.beginTransaction();
 
@@ -221,7 +221,7 @@ public class SpaceshipService extends AbstractService<Spaceship> {
             Spaceship spaceship = dao.findById(session, optId.get())
                     .orElseThrow(() -> new IllegalArgumentException("Not found"));
 
-            for(Mission m : spaceship.getMissionList()) {
+            for (Mission m : spaceship.getMissionList()) {
                 m.getSpaceshipList().remove(spaceship);
             }
 

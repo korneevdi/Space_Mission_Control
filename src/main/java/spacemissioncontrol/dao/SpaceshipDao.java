@@ -2,7 +2,6 @@ package spacemissioncontrol.dao;
 
 import org.hibernate.Session;
 import spacemissioncontrol.entity.Spaceship;
-import spacemissioncontrol.util.HibernateConfig;
 
 import java.util.List;
 

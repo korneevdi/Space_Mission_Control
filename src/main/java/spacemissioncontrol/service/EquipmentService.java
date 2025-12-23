@@ -30,14 +30,14 @@ public class EquipmentService extends AbstractService<Equipment> {
     }
 
     public void showAllByMissionName(String missionName) {
-        try(Session session = HibernateConfig.getSessionFactory().openSession()) {
+        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
             List<Equipment> equipment = equipmentDao.findAllByMissionName(session, missionName);
             printNonEmptyList(equipment, "No data found for mission " + missionName);
         }
     }
 
     public void showAllByNameLike(String nameLike) {
-        try(Session session = HibernateConfig.getSessionFactory().openSession()) {
+        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
             List<Equipment> equipment = equipmentDao.findAllByNameLike(session, nameLike);
             printNonEmptyList(equipment, "No data found");
         }
@@ -45,12 +45,12 @@ public class EquipmentService extends AbstractService<Equipment> {
 
     public void addNew(String name, String category, String weightKg, String missionName) {
 
-        if(missionName == null) {
+        if (missionName == null) {
             System.out.println("Required data missing. Mission name should be specified");
             return;
         }
 
-        if(name == null) {
+        if (name == null) {
             System.out.println("Required data missing. Equipment name should be specified");
             return;
         }
@@ -63,7 +63,7 @@ public class EquipmentService extends AbstractService<Equipment> {
             transaction = session.beginTransaction();
 
             Optional<Integer> optId = findId(session, name, category);
-            if(optId.isPresent()) {
+            if (optId.isPresent()) {
                 System.out.println("This equipment already exists");
                 transaction.rollback();
                 return;
@@ -78,15 +78,15 @@ public class EquipmentService extends AbstractService<Equipment> {
 
             Equipment equipment = new Equipment();
             equipment.setName(name);
-            if(category != null) {
+            if (category != null) {
                 equipment.setCategory(category);
             }
-            if(weightKg != null) {
+            if (weightKg != null) {
                 equipment.setWeightKg(new BigDecimal(weightKg));
             }
             equipment.setMission(mission);
 
-            if(!isValidEntity(equipment)) {
+            if (!isValidEntity(equipment)) {
                 transaction.rollback();
                 return;
             }
@@ -95,23 +95,23 @@ public class EquipmentService extends AbstractService<Equipment> {
 
             transaction.commit();
         } catch (Exception e) {
-            if(transaction != null) {
+            if (transaction != null) {
                 transaction.rollback();
             }
             throw e;
         } finally {
-            if(session != null) {
+            if (session != null) {
                 session.close();
             }
         }
     }
 
     public void updateName(String name, String category, String newName) {
-        if(newName == null) {
+        if (newName == null) {
             System.out.println("New name should be specified");
             return;
         }
-        if(name.equals(newName)) {
+        if (name.equals(newName)) {
             System.out.println("Old name and new name are identical. Nothing to update");
             return;
         }
@@ -120,11 +120,11 @@ public class EquipmentService extends AbstractService<Equipment> {
     }
 
     public void updateCategory(String name, String category, String newCategory) {
-        if(newCategory == null) {
+        if (newCategory == null) {
             System.out.println("New category should be specified");
             return;
         }
-        if(category.equals(newCategory)) {
+        if (category.equals(newCategory)) {
             System.out.println("Old category and new category are identical. Nothing to update");
             return;
         }
@@ -133,7 +133,7 @@ public class EquipmentService extends AbstractService<Equipment> {
     }
 
     public void updateWeight(String name, String category, Double newWeight) {
-        if(newWeight == null || newWeight < 0) {
+        if (newWeight == null || newWeight < 0) {
             System.out.println("New weight should be specified and be non-negative");
             return;
         }
@@ -141,7 +141,7 @@ public class EquipmentService extends AbstractService<Equipment> {
                 equipment -> equipment.setWeightKg(new BigDecimal(newWeight)));
     }
 
-    private void updateEquipment(String name, String category, Consumer<Equipment> updater){
+    private void updateEquipment(String name, String category, Consumer<Equipment> updater) {
 
         if (name == null || category == null) {
             System.out.println("Missing data. Name and category should be specified");
@@ -151,7 +151,7 @@ public class EquipmentService extends AbstractService<Equipment> {
         Session session = null;
         Transaction transaction = null;
 
-        try{
+        try {
             session = HibernateConfig.getSessionFactory().openSession();
             transaction = session.beginTransaction();
 
@@ -172,7 +172,7 @@ public class EquipmentService extends AbstractService<Equipment> {
 
             updater.accept(equipment);
 
-            if(!isValidEntity(equipment)) {
+            if (!isValidEntity(equipment)) {
                 transaction.rollback();
                 return;
             }
@@ -196,7 +196,7 @@ public class EquipmentService extends AbstractService<Equipment> {
         Session session = null;
         Transaction transaction = null;
 
-        try{
+        try {
             session = HibernateConfig.getSessionFactory().openSession();
             transaction = session.beginTransaction();
 

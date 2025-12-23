@@ -67,7 +67,7 @@ public class AstronautService extends AbstractService<Astronaut> {
             transaction = session.beginTransaction();
 
             Optional<Integer> optId = findId(session, firstName, lastName, realBirthDate, country);
-            if(optId.isPresent()) {
+            if (optId.isPresent()) {
                 System.out.println("This astronaut already exists");
                 transaction.rollback();
                 return;
@@ -89,7 +89,7 @@ public class AstronautService extends AbstractService<Astronaut> {
             astronaut.setBirthDate(realBirthDate);
             astronaut.setCountry(country);
 
-            if(!isValidEntity(astronaut)) {
+            if (!isValidEntity(astronaut)) {
                 transaction.rollback();
                 return;
             }
@@ -113,11 +113,11 @@ public class AstronautService extends AbstractService<Astronaut> {
 
     public void updateFirstName(String firstName, String lastName, String birthDate,
                                 String country, String newFirstName) {
-        if(newFirstName == null) {
+        if (newFirstName == null) {
             System.out.println("New first name should be specified");
             return;
         }
-        if(firstName.equals(newFirstName)) {
+        if (firstName.equals(newFirstName)) {
             System.out.println("Old first name and new first name are identical. Nothing to update");
             return;
         }
@@ -126,12 +126,12 @@ public class AstronautService extends AbstractService<Astronaut> {
     }
 
     public void updateLastName(String firstName, String lastName, String birthDate,
-                                String country, String newLastName) {
-        if(newLastName == null) {
+                               String country, String newLastName) {
+        if (newLastName == null) {
             System.out.println("New last name should be specified");
             return;
         }
-        if(lastName.equals(newLastName)) {
+        if (lastName.equals(newLastName)) {
             System.out.println("Old last name and new last name are identical. Nothing to update");
             return;
         }
@@ -140,12 +140,12 @@ public class AstronautService extends AbstractService<Astronaut> {
     }
 
     public void updateBirthDate(String firstName, String lastName, String birthDate,
-                               String country, String newBirthDate) {
-        if(newBirthDate == null) {
+                                String country, String newBirthDate) {
+        if (newBirthDate == null) {
             System.out.println("New birth date should be specified");
             return;
         }
-        if(birthDate.equals(newBirthDate)) {
+        if (birthDate.equals(newBirthDate)) {
             System.out.println("Old birth date and new birth date are identical. Nothing to update");
             return;
         }
@@ -161,8 +161,8 @@ public class AstronautService extends AbstractService<Astronaut> {
     }
 
     public void updateRank(String firstName, String lastName, String birthDate,
-                               String country, String newRank) {
-        if(newRank == null) {
+                           String country, String newRank) {
+        if (newRank == null) {
             System.out.println("New rank should be specified");
             return;
         }
@@ -171,12 +171,12 @@ public class AstronautService extends AbstractService<Astronaut> {
     }
 
     public void updateCountry(String firstName, String lastName, String birthDate,
-                               String country, String newCountry) {
-        if(newCountry == null) {
+                              String country, String newCountry) {
+        if (newCountry == null) {
             System.out.println("New country should be specified");
             return;
         }
-        if(country.equals(newCountry)) {
+        if (country.equals(newCountry)) {
             System.out.println("Old country and new country are identical. Nothing to update");
             return;
         }
@@ -185,7 +185,7 @@ public class AstronautService extends AbstractService<Astronaut> {
     }
 
     private void updateAstronaut(String firstName, String lastName, String birthDate,
-                                 String country, Consumer<Astronaut> updater){
+                                 String country, Consumer<Astronaut> updater) {
 
         if (firstName == null || lastName == null || birthDate == null || country == null) {
             System.out.println("Missing data. First name, last name, birth date, and country should be specified");
@@ -203,7 +203,7 @@ public class AstronautService extends AbstractService<Astronaut> {
         Session session = null;
         Transaction transaction = null;
 
-        try{
+        try {
             session = HibernateConfig.getSessionFactory().openSession();
             transaction = session.beginTransaction();
 
@@ -226,7 +226,7 @@ public class AstronautService extends AbstractService<Astronaut> {
 
             updater.accept(astronaut);
 
-            if(!isValidEntity(astronaut)) {
+            if (!isValidEntity(astronaut)) {
                 transaction.rollback();
                 return;
             }
@@ -258,7 +258,7 @@ public class AstronautService extends AbstractService<Astronaut> {
         Session session = null;
         Transaction transaction = null;
 
-        try{
+        try {
             session = HibernateConfig.getSessionFactory().openSession();
             transaction = session.beginTransaction();
 
@@ -279,7 +279,7 @@ public class AstronautService extends AbstractService<Astronaut> {
             Astronaut astronaut = dao.findById(session, optId.get())
                     .orElseThrow(() -> new IllegalArgumentException("Not found"));
 
-            for(Mission m : astronaut.getMissionList()) {
+            for (Mission m : astronaut.getMissionList()) {
                 m.getAstronautList().remove(astronaut);
             }
 
